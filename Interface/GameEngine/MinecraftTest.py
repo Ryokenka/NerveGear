@@ -5,18 +5,17 @@ class MinecraftEngine :
     def __init__(self):
         print("Init Minecraft")
 
-    def bouger_perso(self, key_press, duration, action='walking'):
+    def bouger_perso(self, key_press, duration, action):
         print("Bouger Perso")
-        sleep(2)
-        pt.keyDown(key_press)
-        if action == 'walking':
-            print('walking')
-        elif action == 'attack':
-            pt.keyDown('x')
+        Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
+        Minecraft.activate()
+        if pt.keyDown(key_press):
+            pt.keyUp(key_press)
+            print(action+"début")
+        else:
+            pt.keyDown(key_press)
+            print(action+"fin")
 
-        sleep(duration)
-        pt.keyUp('x')
-        pt.keyUp(key_press)
 
 
 #duration = 10
