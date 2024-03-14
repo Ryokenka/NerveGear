@@ -1,9 +1,8 @@
 from tkinter import *
-
 from Interface.GameEngine.MinecraftTest import MinecraftEngine
+import customtkinter as ctk
 
 MC = MinecraftEngine()
-
 
 def MCavancer():
     MC.bouger_perso('z', 2, 'avant')
@@ -14,45 +13,57 @@ def MCgauche():
 def MCdroite():
     MC.bouger_perso('d', 2, 'droit')
 
-# Création de la première fenètre
-fenetreMain = Tk()
-fenetreMain.geometry('720x480')
-fenetreMain.title("Interface Test")
-fenetreMain['bg'] = 'ivory'
-fenetreMain.resizable(height=True, width=True)
-fenetreMain.minsize(height="480", width="360")
-fenetreMain.iconbitmap("../Image/LOGO_NVG.ico")
+class App(ctk.CTk):
+    def __init__(self):
+        super().__init__()
 
-labelMain = Label(fenetreMain, text="Interface de configuration", background='ivory', font=("Courrier", 30)).pack(
-    side=TOP, padx=50)
+        self.geometry('720x480')
+        self.title("Interface Test")
+        self.iconbitmap("../Image/LOGO_NVG.ico")
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+        self.labelMain = (ctk.CTkLabel(self, text="Interface de configuration", font=("Courrier", 20))
+                          .grid(row=0,column=1, padx=20, pady=20))
+        # Create CTkFrame
+        #menuMain = Menu(self, background="red")
+        #fichier = Menu(menuMain, tearoff=0, background="red")
+        #fichier.add_command(label="Jeu")
 
-# Création du Menu
-menuMain = Menu(fenetreMain)
-fichier = Menu(menuMain, tearoff=0)
-fichier.add_command(label="Jeu")
+        #configuration = Menu(menuMain, tearoff=0)
+        #configuration.add_command(label="Enregistrer la configuration")
 
-configuration = Menu(menuMain, tearoff=0)
-configuration.add_command(label="Enregistrer la configuration")
+        #menuMain.add_cascade(label="Fichier", menu=fichier)
+        #menuMain.add_cascade(label="Configuration", menu=configuration)
+        #self.config(menu=menuMain)
+        self.frame_navig = FrameNavig(self)
+        self.frame_navig.grid(column=0, padx=20, pady=20)
 
-menuMain.add_cascade(label="Fichier", menu=fichier)
-menuMain.add_cascade(label="Configuration", menu=configuration)
-fenetreMain.config(menu=menuMain)
+        self.frame_boutons = FrameBoutons(self)
+        self.frame_boutons.grid(row=1, column=1, padx=20, pady=20)
 
-# Création de la frame
+class FrameNavig(ctk.CTkFrame):
+    def __init__(self, master):
+        super().__init__(master)
+        self.button1 = ctk.CTkButton(self, text="Configuration", command=MCavancer)
+        self.button1.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
 
-frameBd = Frame(fenetreMain, bg="ivory")
-btn = Button(frameBd, text='Avancer', font=("Courrier", 25), bg='#96C3CE', fg='black',
-             command=MCavancer)
-btn.pack(pady=25, fill=X)
-btn2 = Button(frameBd, text='Reculer', font=("Courrier", 25), bg='#96C3CE', fg='black',
-             command=MCreculer)
-btn2.pack(pady=25, fill=X)
-btn3 = Button(frameBd, text='Gauche', font=("Courrier", 25), bg='#96C3CE', fg='black',
-             command=MCgauche)
-btn3.pack(pady=25, fill=X)
-btn4 = Button(frameBd, text='Droite', font=("Courrier", 25), bg='#96C3CE', fg='black',
-             command=MCdroite)
-btn4.pack(pady=25, fill=X)
+        self.button2 = ctk.CTkButton(self, text="Test Commandes", command=MCreculer)
+        self.button2.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
+class FrameBoutons(ctk.CTkFrame):
+    def __init__(self,master):
+        super().__init__(master)
+        self.button1 = ctk.CTkButton(self, text="Avancer", command=MCavancer)
+        self.button1.grid(row=0, column=1, padx=10, pady=10, sticky="ew")
 
-frameBd.pack(expand=YES)
-fenetreMain.mainloop()
+        self.button2 = ctk.CTkButton(self, text="Reculer", command=MCreculer)
+        self.button2.grid(row=1, column=1, padx=10, pady=10, sticky="ew")
+
+        self.button3 = ctk.CTkButton(self, text="Gauche", command=MCgauche)
+        self.button3.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
+
+        self.button4 = ctk.CTkButton(self, text="Droite", command=MCdroite)
+        self.button4.grid(row=1, column=2, padx=10, pady=10, sticky="ew")
+
+if __name__ == "__main__":
+    app = App()
+    app.mainloop()
