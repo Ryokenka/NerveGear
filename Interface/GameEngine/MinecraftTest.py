@@ -16,8 +16,16 @@ class MinecraftEngine :
             pt.keyDown(key_press)
             print(action+"fin")
 
-
-
+    def mouvement_gauche_droite_cam(self, side):
+        Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
+        Minecraft.activate()
+        if side == "gauche":
+            pt.keyDown("q")
+        elif side == "droite":
+            pt.keyDown("d")
+        else :
+            pt.keyUp("q")
+            pt.keyUp("d")
 #duration = 10
 
 #while duration !=0:

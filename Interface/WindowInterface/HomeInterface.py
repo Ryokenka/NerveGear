@@ -13,6 +13,7 @@ def MCgauche():
 def MCdroite():
     MC.bouger_perso('d', 2, 'droit')
 
+#l'interface
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -101,21 +102,24 @@ class FrameConfig(ctk.CTkFrame):
                 list.e.grid(row=i, column=j, padx=20, pady=10)
 
 
-
+#definition du mapping
 if __name__ == "__main__":
-    lst = [["Touche Avancer", ["Capteur EEG","Capteur ECG","Capteur EMG"]],
-           ["Touche Gauche", ["Capteur EEG","Capteur ECG","Capteur EMG"]],
-           ["Touche Droite", ["Capteur EEG","Capteur ECG","Capteur EMG"]],
-           ["Touche Reculer", ["Capteur EEG","Capteur ECG","Capteur EMG"]],
-           ["Touche Sauter", ["Capteur EEG","Capteur ECG","Capteur EMG"]],
-           ["Touche Action 1", ["Capteur EEG","Capteur ECG","Capteur EMG"]],
-           ["Touche Action 2", ["Capteur EEG","Capteur ECG","Capteur EMG"]],
-           ["Touche F1", ["Capteur EEG","Capteur ECG","Capteur EMG"]],
-           ["Touche F2", ["Capteur EEG","Capteur ECG","Capteur EMG"]],
-           ["Touche F3", ["Capteur EEG","Capteur ECG","Capteur EMG"]],
-           ["Touche F4", ["Capteur EEG","Capteur ECG","Capteur EMG"]],
-           ["Touche F5", ["Capteur EEG","Capteur ECG","Capteur EMG"]],
-           ["Touche F6", ["Capteur EEG","Capteur ECG","Capteur EMG"]],]
+    lst = [["Touche Avancer", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],
+           ["Touche Gauche", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],
+           ["Touche Droite", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],
+           ["Touche Reculer", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],
+           ["Touche Sauter", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],
+           ["Touche Action 1", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],
+           ["Touche Action 2", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],
+           ["Touche F1", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],
+           ["Touche F2", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],
+           ["Touche F3", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],
+           ["Touche F4", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],
+           ["Touche F5", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],
+           ["Touche F6", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],]
+
+    # appeler fichiers ds capteurs selon la configuration
+
 
     total_rows = len(lst)
     app = App()

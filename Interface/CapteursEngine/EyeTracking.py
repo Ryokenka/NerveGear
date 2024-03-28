@@ -9,7 +9,7 @@ pyautogui.FAILSAFE = False
 # Creating a openCv object
 video = cv2.VideoCapture(0)
 # using haarcascade_eye.xml
-eye_cascade = cv2.CascadeClassifier("haarcascade_eye.xml")
+eye_cascade = cv2.CascadeClassifier("../CaptorEngine/haarcascade_eye.xml")
 while True:
     check, img = video.read()
     g_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
