@@ -1,6 +1,9 @@
 from tkinter import *
 from Interface.GameEngine.MinecraftTest import MinecraftEngine
+from Interface.CapteursEngine.HeadTiltRecognition import HeadTracking
+
 import customtkinter as ctk
+import csv
 
 MC = MinecraftEngine()
 
@@ -12,6 +15,25 @@ def MCgauche():
     MC.bouger_perso('q', 2, 'gauche')
 def MCdroite():
     MC.bouger_perso('d', 2, 'droit')
+
+def load_config(filename):
+    with open(filename, 'r') as file:
+        reader = csv.reader(file)
+        config = []
+        for row in reader:
+            action = row[0]
+            options = row[1:]
+            config.append([action, options])
+        return config
+
+def load_selected_options():
+    with open("../ConfigEngine/selected_options.txt", 'r') as file:
+        reader = csv.reader(file)
+        config = []
+        for row in reader:
+            selected = row[0]
+            config.append(selected)
+        return config
 
 #l'interface
 class App(ctk.CTk):
@@ -53,6 +75,11 @@ class App(ctk.CTk):
 class FrameNavig(ctk.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
+        self.frame_start = ctk.CTkFrame(self)
+        self.frame_start.button = ctk.CTkSwitch(master=self.frame_start, text="Tracking", command=lambda: HeadTracking(MC),
+                                    onvalue="on", offvalue="off")
+        self.frame_start.pack(pady=20, padx=20)
+        self.frame_start.button.pack(pady=20, padx=30)
         self.button1 = ctk.CTkButton(self, text="Configuration", command=lambda: master.show_frame(FrameConfig))
         self.button1.pack(pady=20, padx=20)
 
@@ -80,8 +107,16 @@ class FrameBoutons(ctk.CTkFrame):
 
 class FrameConfig(ctk.CTkFrame):
     def __init__(self, master):
-        def optionmenu_callback(choice):
-            print("optionmenu dropdown clicked:", choice)
+        def optionmenu_callback(choice, i):
+            print(choice,i)
+            with open('../ConfigEngine/selected_options.txt', 'r') as f:
+                lines = f.readlines()
+            with open('../ConfigEngine/selected_options.txt', 'w') as f:
+                for j, line in enumerate(lines):
+                    if j == i:
+                        f.write(f'{choice}\n')
+                    else:
+                        f.write(line)
 
         ctk.CTkFrame.__init__(self, master)
         self.grid_rowconfigure(0, weight=1)
@@ -94,9 +129,9 @@ class FrameConfig(ctk.CTkFrame):
                 if j ==0:
                     list.e=ctk.CTkLabel(list, text=lst[i][0])
                 else:
-                    optionmenu_var = ctk.StringVar(value=lst[i][1][0])
+                    optionmenu_var = ctk.StringVar(value=lst_selected[i])
                     list.e=ctk.CTkOptionMenu(list, values=lst[i][1],
-                                             command=optionmenu_callback,
+                                             command=lambda choice, nb=i : optionmenu_callback(choice, nb),
                                              variable=optionmenu_var)
 
                 list.e.grid(row=i, column=j, padx=20, pady=10)
@@ -104,23 +139,10 @@ class FrameConfig(ctk.CTkFrame):
 
 #definition du mapping
 if __name__ == "__main__":
-    lst = [["Touche Avancer", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],
-           ["Touche Gauche", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],
-           ["Touche Droite", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],
-           ["Touche Reculer", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],
-           ["Touche Sauter", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],
-           ["Touche Action 1", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],
-           ["Touche Action 2", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],
-           ["Touche F1", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],
-           ["Touche F2", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],
-           ["Touche F3", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],
-           ["Touche F4", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],
-           ["Touche F5", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],
-           ["Touche F6", ["Capteur EEG","Capteur ECG","Capteur EMG","WebCam"]],]
-
     # appeler fichiers ds capteurs selon la configuration
 
-
+    lst =load_config('../ConfigEngine/config.csv')
+    lst_selected = load_selected_options()
     total_rows = len(lst)
     app = App()
     app.mainloop()
