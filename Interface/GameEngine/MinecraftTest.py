@@ -16,6 +16,24 @@ class MinecraftEngine :
             pt.keyDown(key_press)
             print(action+"fin")
 
+    def clic_rapide(self, key_press):
+        Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
+        Minecraft.activate()
+        pt.hotkey(key_press)
+
+    def clic_toggle(self, key_press):
+        Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
+        Minecraft.activate()
+        if pt.keyDown(key_press):
+            pt.keyUp(key_press)
+        else:
+            pt.keyDown(key_press)
+
+    def clic_parmi_plusieurs_choix(self,number,tab):
+        Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
+        Minecraft.activate()
+        pt.hotkey(tab[number])
+
     def mouvement_gauche_droite_cam(self, side):
         Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
         Minecraft.activate()
@@ -26,6 +44,15 @@ class MinecraftEngine :
         else :
             pt.keyUp("q")
             pt.keyUp("d")
+
+    def changer_barre(self,number):
+        Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
+        Minecraft.activate()
+        tab = ["&","é",'"',"'","(","-","è","_","ç"]
+        pt.hotkey(tab[number])
+
+
+
 #duration = 10
 
 #while duration !=0:

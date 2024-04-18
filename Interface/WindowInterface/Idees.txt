@@ -1,0 +1,26 @@
+Avancer/Reculer/Gauche/Droite Camera ou Accelerometre
+Sauter (touche espace) Muscle une impulsion / muscle 2 impulsion
+Clic Muscle une impulsion / muscle 2 impulsion
+Changer d'objet en main : Doigts caméra / Eye-tracking
+
+on check les choix des utilisateurs -> [camera,1impuls,2impuls,doigtscamera]
+
+Quand on lance : on appuie sur le bouton tracking : qui appelle :
+Fonction startAllTrackingChoices (choixAvancer,choixsauter,choixClic, choixobjet):
+    faire des if
+    si utilise cam :
+    lancer cam : diviser le code de caméra en ?
+        Camera(tableauchoixdestouches)
+
+    ou
+        CameraEtDoigt("touche_gauche","touche_droite","touche_milieu","tableau des touches à faire par doigts")
+
+    si on utilise muscle :
+
+    Muscle("sauter","clic")
+
+def Muscle(une_impuls,deux_impuls):
+    if detect une impulsion
+        MC.appuyersur("sauter")
+    if detect deux impulsion
+        MC.appuersur("clic")

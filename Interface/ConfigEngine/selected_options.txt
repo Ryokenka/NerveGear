@@ -1,9 +1,9 @@
-Capteur EEG
-WebCam
-Capteur EEG
+ Capteur EEG - clignement des yeux
+Capteur ECG
+Capteur EMG
 Capteur ECG
 Capteur ECG
-Capteur EEG
+Capteur ECG
 WebCam
 Capteur EEG
 WebCam
