@@ -1,4 +1,6 @@
 from tkinter import *
+
+from Interface.CapteursEngine.BitalinoEngine import MuscleTracking
 from Interface.GameEngine.MinecraftTest import MinecraftEngine
 from Interface.CapteursEngine.HeadTiltRecognition import HeadTracking
 from Interface.CapteursEngine.HeadTiltRecognition import HeadEtHandTracking
@@ -65,7 +67,7 @@ class App(ctk.CTk):
 
         self.frames = {}
 
-        for F in (FrameConfig, FrameBoutons, FrameGuideCapteurs, FrameMonProfil, FrameNervegear):
+        for F in (FrameConfig, FrameBoutons):
             self.frames[F] = F(container)
             self.frames[F].grid(row=0, column=0, sticky="nsew")
         self.show_frame(FrameConfig)
@@ -77,8 +79,7 @@ class FrameNavig(ctk.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
         self.frame_start = ctk.CTkFrame(self)
-        #ici faire fonction de choix des autres fcts
-        self.frame_start.button = ctk.CTkSwitch(master=self.frame_start, text="Tracking", command=lambda: print(load_selected_options()),
+        self.frame_start.button = ctk.CTkSwitch(master=self.frame_start, text="Tracking", command=lambda: HeadTracking(MC),
                                     onvalue="on", offvalue="off")
         self.frame_start.pack(pady=20, padx=20)
         self.frame_start.button.pack(pady=20, padx=30)
@@ -88,20 +89,9 @@ class FrameNavig(ctk.CTkFrame):
         self.button2 = ctk.CTkButton(self, text="Test Commandes", command=lambda: master.show_frame(FrameBoutons))
         self.button2.pack(pady=20, padx=20)
 
-        self.button_guide = ctk.CTkButton(self, text="Guide capteurs",
-                                          command=lambda: master.show_frame(FrameGuideCapteurs))
-        self.button_guide.pack(pady=20, padx=20)
-
-        self.button_profil = ctk.CTkButton(self, text="Mon profil", command=lambda: master.show_frame(FrameMonProfil))
-        self.button_profil.pack(pady=20, padx=20)
-
-        self.button_nervegear = ctk.CTkButton(self, text="Nervegear", command=lambda: master.show_frame(FrameNervegear))
-        self.button_nervegear.pack(pady=20, padx=20)
-
 class FrameBoutons(ctk.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
-
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
         self.grid_columnconfigure(2, weight=1)
@@ -149,80 +139,12 @@ class FrameConfig(ctk.CTkFrame):
 
                 list.e.grid(row=i, column=j, padx=20, pady=10)
 
-class FrameGuideCapteurs(ctk.CTkFrame):
-    def __init__(self, master):
-        super().__init__(master)
-
-        self.labelMain = (ctk.CTkLabel(self, text="text", font=("Courrier", 20))
-                          .grid(row=0, padx=20, pady=20))
-
-        self.grid_rowconfigure(0, weight=1)
-        self.grid_columnconfigure(0, weight=1)
-        self.labelMain = (ctk.CTkLabel(self, text="Guide des capteurs", font=("Courrier", 20))
-                          .grid(row=0, padx=20, pady=20))
-
-class FrameMonProfil(ctk.CTkFrame):
-    def __init__(self, master):
-        super().__init__(master)
-
-        self.grid_rowconfigure(0, weight=1)
-        self.grid_columnconfigure(0, weight=1)
-        self.labelMain = (ctk.CTkLabel(self, text="Mon profil blabla", font=("Courrier", 20))
-                          .grid(row=0, padx=20, pady=20))
-
-class FrameNervegear(ctk.CTkFrame):
-    def __init__(self, master):
-        super().__init__(master)
-        self.labelMain = (ctk.CTkLabel(self, text="text", font=("Courrier", 20))
-                          .grid(row=0, padx=20, pady=20))
-        self.grid_rowconfigure(0, weight=1)
-        self.grid_columnconfigure(0, weight=1)
-        self.labelMain = (ctk.CTkLabel(self, text="Nervegear", font=("Courrier", 20))
-                          .grid(row=0, padx=20, pady=20))
-
-def StartAllTracking(MC, TableauMapping):
-    ListeDesTouches = TableauMapping[0]
-    ListeDesCapteurs = TableauMapping[1]
-    print("je veux lancer les capteurs : "+ListeDesCapteurs)
-
-
-def traiter_capteur_eeg():
-    print("Traitement pour Capteur EEG - clignement des yeux")
-
-def traiter_capteur_ecg():
-    print("Traitement pour Capteur ECG - rythme cardiaque")
-
-def traiter_capteur_emg():
-    print("Traitement pour Capteur EMG - bras")
-
-def traiter_webcam_tete_droite():
-    print("Traitement pour WebCam tete droite")
-
-def traiter_webcam_tete_gauche():
-    print("Traitement pour WebCam tete gauche")
-
-def traiter_webcam_main_un():
-    print("Traitement pour main un")
-
-def traiter_webcam_main_deux():
-    print("Traitement pour main deux")
-
-def traiter_webcam_main_trois():
-    print("Traitement pour main trois")
-
-def traiter_webcam_main_quatre():
-    print("Traitement pour main quatre")
-
-def traiter_webcam_main_cinq():
-    print("Traitement pour main cinq")
-
 
 #definition du mapping
 if __name__ == "__main__":
     # appeler fichiers ds capteurs selon la configuration
 
     lst =load_config('../ConfigEngine/config.csv')
-    print("yolo")
     lst_selected = load_selected_options()
     total_rows = len(lst)
     app = App()
