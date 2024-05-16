@@ -1,13 +1,5 @@
-Touche Avancer,Veuillez choisir, Capteur EEG - clignement des yeux,Capteur ECG - rythme cardiaque, Capteur EMG - bras, WebCam tete droite, WebCam tete gauche,WebCam main 1,WebCam main 2,WebCam main 3,WebCam main 4,WebCam main 5
-Touche Gauche,Capteur EEG,Capteur ECG,Capteur EMG,WebCam
-Touche Droite,Capteur EEG,Capteur ECG,Capteur EMG,WebCam
-Touche Reculer,Capteur EEG,Capteur ECG,Capteur EMG,WebCam
-Touche Sauter,Capteur EEG,Capteur ECG,Capteur EMG,WebCam
-Touche Action 1,Capteur EEG,Capteur ECG,Capteur EMG,WebCam
-Touche Action 2,Capteur EEG,Capteur ECG,Capteur EMG,WebCam
-Touche F1,Capteur EEG,Capteur ECG,Capteur EMG,WebCam
-Touche F2,Capteur EEG,Capteur ECG,Capteur EMG,WebCam
-Touche F3,Capteur EEG,Capteur ECG,Capteur EMG,WebCam
-Touche F4,Capteur EEG,Capteur ECG,Capteur EMG,WebCam
-Touche F5,Capteur EEG,Capteur ECG,Capteur EMG,WebCam
-Touche F6,Capteur EEG,Capteur ECG,Capteur EMG,WebCam
+Deplacement (touches flechees),Veuillez choisir,Camera,Accelerometre
+Vitesse, Veuillez choisir,ECG - rythme cardiaque
+Sauter (touche espace),Veuillez choisir,EMG - bras une impulsion,EMG - bras 2 impulsions,EEG - clignement des yeux
+Clique souris,Veuillez choisir,EMG - bras 1 implusion,EMG - bras 2 implusions
+Changer d'objet en main,Veuillez choisir,Camera - doigts,Camera - Eye tracking

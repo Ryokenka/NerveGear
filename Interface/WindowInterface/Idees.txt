@@ -24,3 +24,9 @@ def Muscle(une_impuls,deux_impuls):
         MC.appuyersur("sauter")
     if detect deux impulsion
         MC.appuersur("clic")
+
+
+Petites chose à faire :
+faire un css, gérer la forme : intégrer les accents
+Mettre un titre pour chaque onglet
+remplir les 3 derniers

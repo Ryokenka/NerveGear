@@ -7,9 +7,8 @@ from Interface.CapteursEngine.HeadTiltRecognition import HeadEtHandTracking
 
 import customtkinter as ctk
 import csv
-
+#Test des commandes
 MC = MinecraftEngine()
-
 def MCavancer():
     MC.bouger_perso('z', 2, 'avant')
 def MCreculer():
@@ -29,15 +28,6 @@ def load_config(filename):
             action = row[0]
             options = row[1:]
             config.append([action, options])
-        return config
-
-def load_selected_options():
-    with open("../ConfigEngine/selected_options.txt", 'r') as file:
-        reader = csv.reader(file)
-        config = []
-        for row in reader:
-            selected = row[0]
-            config.append(selected)
         return config
 
 #l'interface
@@ -82,8 +72,9 @@ class FrameNavig(ctk.CTkFrame):
         super().__init__(master)
         self.frame_start = ctk.CTkFrame(self)
         #ici faire fonction de choix des autres fcts
-        self.frame_start.button = ctk.CTkSwitch(master=self.frame_start, text="Tracking", command=lambda: MuscleTracking(MC.mouvement_clic_muscle, MC.mouvement_saut_muscle),
-                                    onvalue="on", offvalue="off")
+        #self.frame_start.button = ctk.CTkSwitch(master=self.frame_start, text="Tracking", command=lambda: MuscleTracking(MC.mouvement_clic_muscle, MC.mouvement_saut_muscle),
+        #self.frame_start.button = ctk.CTkSwitch(master=self.frame_start, text="Tracking", command=lambda: StartAllTracking(),
+                                    #onvalue="on", offvalue="off")
         self.frame_start.pack(pady=20, padx=20)
         self.frame_start.button.pack(pady=20, padx=30)
         self.button1 = ctk.CTkButton(self, text="Configuration", command=lambda: master.show_frame(FrameConfig))
@@ -124,34 +115,27 @@ class FrameBoutons(ctk.CTkFrame):
 
 class FrameConfig(ctk.CTkFrame):
     def __init__(self, master):
-        def optionmenu_callback(choice, i):
-            print(choice,i)
-            with open('../ConfigEngine/selected_options.txt', 'r') as f:
-                lines = f.readlines()
-            with open('../ConfigEngine/selected_options.txt', 'w') as f:
-                for j, line in enumerate(lines):
-                    if j == i:
-                        f.write(f'{choice}\n')
-                    else:
-                        f.write(line)
-
         ctk.CTkFrame.__init__(self, master)
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
-        list=ctk.CTkScrollableFrame(self)
-        list.grid(row=0, column=0, sticky="nsew")
+        self.scrollable_frame = ctk.CTkScrollableFrame(self)
+        self.scrollable_frame.grid(row=0, column=0, sticky="nsew")
 
         for i in range(total_rows):
             for j in range(2):
-                if j ==0:
-                    list.e=ctk.CTkLabel(list, text=lst[i][0])
+                if j == 0:
+                    label = ctk.CTkLabel(self.scrollable_frame, text=lst[i][0])
+                    label.grid(row=i, column=j, padx=20, pady=10)
                 else:
                     optionmenu_var = ctk.StringVar(value=lst_selected[i])
-                    list.e=ctk.CTkOptionMenu(list, values=lst[i][1],
-                                             command=lambda choice, nb=i : optionmenu_callback(choice, nb),
-                                             variable=optionmenu_var)
+                    option_menu = ctk.CTkOptionMenu(self.scrollable_frame, values=lst[i][1],
+                                                     command=lambda choice, nb=i: write_selected_options(choice, nb),
+                                                     variable=optionmenu_var)
+                    option_menu.grid(row=i, column=j, padx=20, pady=10)
 
-                list.e.grid(row=i, column=j, padx=20, pady=10)
+
+
+
 
 class FrameGuideCapteurs(ctk.CTkFrame):
     def __init__(self, master):
@@ -184,41 +168,152 @@ class FrameNervegear(ctk.CTkFrame):
         self.labelMain = (ctk.CTkLabel(self, text="Nervegear", font=("Courrier", 20))
                           .grid(row=0, padx=20, pady=20))
 
-def StartAllTracking(MC, TableauMapping):
-    ListeDesTouches = TableauMapping[0]
-    ListeDesCapteurs = TableauMapping[1]
-    print("je veux lancer les capteurs : "+ListeDesCapteurs)
+def load_selected_options():
+    with open("../ConfigEngine/selected_options.txt", 'r') as file:
+        reader = csv.reader(file)
+        config = []
+        for row in reader:
+            selected = row[0]
+            config.append(selected)
+        return config
 
 
-def traiter_capteur_eeg():
-    print("Traitement pour Capteur EEG - clignement des yeux")
+def write_selected_options(choice, i):
+    print("write")
+    with open('../ConfigEngine/selected_options.txt', 'r') as f:
+        lines = f.readlines()
+    with open('../ConfigEngine/selected_options.txt', 'w') as f:
+        for j, line in enumerate(lines):
+            if j == i:
+                f.write(f'{choice}\n')
+            else:
+                f.write(line)
+def StartAllTracking():
+    print("StartAllTracking\n")
 
-def traiter_capteur_ecg():
-    print("Traitement pour Capteur ECG - rythme cardiaque")
+    val = load_selected_options()
 
-def traiter_capteur_emg():
-    print("Traitement pour Capteur EMG - bras")
+    for i, value in enumerate(val):
+        print(f"Valeur {i + 1} :", value)
 
-def traiter_webcam_tete_droite():
-    print("Traitement pour WebCam tete droite")
+    # Liste des utilisations des capteurs
+    sensor_uses = [
+        "Déplacement",
+        "Vitesse",
+        "Sauter",
+        "Clique souris",
+        "Changer d'objet"
+    ]
 
-def traiter_webcam_tete_gauche():
-    print("Traitement pour WebCam tete gauche")
+    # Initialisation du dictionnaire des utilisations des capteurs
+    sensor_usage = {
+        "Camera": [],
+        "Accelerometre": [],
+        "EEG": [],
+        "EMG": [],
+        "ECG": []
+    }
 
-def traiter_webcam_main_un():
-    print("Traitement pour main un")
+    sensor_methode = {
+        "Camera": [],
+        "Accelerometre": [],
+        "EEG": [],
+        "EMG": [],
+        "ECG": []
+    }
 
-def traiter_webcam_main_deux():
-    print("Traitement pour main deux")
+    # Remplissage du dictionnaire des utilisations des capteurs en utilisant les indices de val
+    for i, value in enumerate(val):
+        if "Camera" in value:
+            sensor_usage["Camera"].append(sensor_uses[i])
+            sensor_methode["Camera"].append(val[i])
+        elif "Accelerometre" in value:
+            sensor_usage["Accelerometre"].append(sensor_uses[i])
+            sensor_methode["Accelerometre"].append(val[i])
+        elif "EEG" in value:
+            sensor_usage["EEG"].append(sensor_uses[i])
+            sensor_methode["EEG"].append(val[i])
+        elif "EMG" in value:
+            sensor_usage["EMG"].append(sensor_uses[i])
+            sensor_methode["EMG"].append(val[i])
+        elif "ECG" in value:
+            sensor_usage["ECG"].append(sensor_uses[i])
+            sensor_methode["ECG"].append(val[i])
+        elif "Veuillez choisir" in value:
+            print("Aucun choix")
+        else:
+            print("Choix non reconnu :", value)
 
-def traiter_webcam_main_trois():
-    print("Traitement pour main trois")
 
-def traiter_webcam_main_quatre():
-    print("Traitement pour main quatre")
 
-def traiter_webcam_main_cinq():
-    print("Traitement pour main cinq")
+    for sensor, uses in sensor_usage.items():
+        if uses:
+            if sensor == "Camera":
+                start_camera(*uses, methodes=sensor_methode["Camera"])
+            elif sensor == "Accelerometre":
+                start_accelerometre(*uses, methodes=sensor_methode["Accelerometre"])
+            elif sensor == "EEG":
+                start_eeg(*uses, methodes=sensor_methode["EEG"])
+            elif sensor == "EMG":
+                start_emg(*uses, methodes=sensor_methode["EMG"])
+            elif sensor == "ECG":
+                start_ecg(*uses, methodes=sensor_methode["ECG"])
+
+
+def start_camera(*usages, methodes=None):
+    #Déplacement / changer d'objet avec main ou eye tracking
+    print("Démarrage de la caméra.")
+    for usage in usages:
+        print(f"Utilisation de la caméra pour : {usage}")
+
+    if methodes:
+        print("Méthodes spécifiques :")
+        for methode in methodes:
+            print(f"- {methode}")
+
+def start_accelerometre(*usages, methodes=None):
+    #Deplacement
+    print("Démarrage de l'accéléromètre.")
+    for usage in usages:
+        print(f"Utilisation de l'accéléromètre pour : {usage}")
+
+    if methodes:
+        print("Méthodes spécifiques :")
+        for methode in methodes:
+            print(f"- {methode}")
+
+
+def start_eeg(*usages, methodes=None):
+    #Sauter
+    print("Démarrage de l'EEG.")
+    for usage in usages:
+        print(f"Utilisation de l'EEG pour : {usage}")
+    if methodes:
+        print("Méthodes spécifiques :")
+        for methode in methodes:
+            print(f"- {methode}")
+
+def start_emg(*usages, methodes=None):
+    #sauter avec 1 ou 2 implusions
+    print("Démarrage de l'EMG.")
+    for usage in usages:
+        print(f"Utilisation de l'EMG pour : {usage}")
+    if methodes:
+        print("Méthodes spécifiques :")
+        for methode in methodes:
+            print(f"- {methode}")
+
+
+def start_ecg(*usages, methodes=None):
+    #vitesse
+    print("Démarrage de l'ECG.")
+    for usage in usages:
+        print(f"Utilisation de l'ECG pour : {usage}")
+    if methodes:
+        print("Méthodes spécifiques :")
+        for methode in methodes:
+            print(f"- {methode}")
+
 
 
 #definition du mapping
@@ -226,7 +321,6 @@ if __name__ == "__main__":
     # appeler fichiers ds capteurs selon la configuration
 
     lst =load_config('../ConfigEngine/config.csv')
-    print("yolo")
     lst_selected = load_selected_options()
     total_rows = len(lst)
     app = App()

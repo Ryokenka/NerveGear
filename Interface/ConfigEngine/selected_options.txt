@@ -1,13 +1,5 @@
- Capteur EEG - clignement des yeux
-Capteur ECG
-Capteur EMG
-Capteur ECG
-Capteur ECG
-Capteur ECG
-WebCam
-Capteur EEG
-WebCam
-Capteur EEG
-Capteur EEG
-Capteur EEG
-Capteur ECG
+Camera
+ECG - rythme cardiaque
+EMG - bras une impulsion
+EMG - bras 2 implusions
+Veuillez choisir
