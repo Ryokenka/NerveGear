@@ -45,6 +45,18 @@ class MinecraftEngine :
             pt.keyUp("q")
             pt.keyUp("d")
 
+    def mouvement_saut_muscle(self):
+        Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
+        Minecraft.activate()
+        pt.keyDown("space")
+        pt.keyUp("space")
+
+    def mouvement_clic_muscle(self):
+        Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
+        Minecraft.activate()
+        if not pt.leftClick():
+            pt.leftClick()
+
     def changer_barre(self,number):
         Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
         Minecraft.activate()
