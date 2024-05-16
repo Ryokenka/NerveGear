@@ -354,14 +354,33 @@ def start_eeg(*usages, methodes=None):
             print(f"- {methode}")
 
 def start_emg(*usages, methodes=None):
-    #sauter avec 1 ou 2 implusions
+    #sauter avec 1 ou 2 implusions , cliquer avec 1 ou 2 implusions
     print("Démarrage de l'EMG.")
-    for usage in usages:
-        print(f"Utilisation de l'EMG pour : {usage}")
-    if methodes:
-        print("Méthodes spécifiques :")
-        for methode in methodes:
-            print(f"- {methode}")
+
+    if len(usages)==1 and usages[0] =="Sauter" :
+        print("je lance sauter ")
+        if methodes == "EMG - bras 1 impulsion" :
+            MuscleTracking(MC.mouvement_saut_muscle)
+        if methodes == "EMG - bras 2 impulsions"  :
+            MuscleTracking(None, MC.mouvement_saut_muscle)
+
+    elif len(usages)==1 and usages[0] =="Clique souris" :
+        print("je lance souris")
+        if methodes == "EMG - bras 1 impulsion" :
+            MuscleTracking(MC.mouvement_clic_muscle)
+        if methodes == "EMG - bras 2 impulsions"  :
+            MuscleTracking(None, MC.mouvement_clic_muscle)
+
+
+    elif len(usages)==2 :
+        print ("je lance les 2"+"methodes"+methodes[0]+"fin")
+        if methodes[0] == "EMG - bras 1 impulsion" :
+            print("je lance sauter 1 et clic 2 emg")
+            MuscleTracking(MC.mouvement_saut_muscle, MC.mouvement_clic_muscle)
+        if methodes[0] == "EMG - bras 2 impulsions"  :
+            print("je lance sauter 2 et clic 1 emg")
+            MuscleTracking(MC.mouvement_clic_muscle, MC.mouvement_saut_muscle)
+
 
 
 def start_ecg(*usages, methodes=None):
