@@ -46,8 +46,8 @@ class App(ctk.CTk):
 
         self.mainframe = ctk.CTkFrame(self)
 
-        self.labelMain = (ctk.CTkLabel(self.mainframe, text="Interface de configuration", font=("Courrier", 20))
-                          .grid(row=0, padx=20, pady=20))
+        self.labelMain = (ctk.CTkLabel(self.mainframe, text="Interface de configuration", font=("Courrier", 25, "bold"))
+                          .grid(row=0, padx=20, pady=10))
         container = ctk.CTkFrame(self.mainframe)
         container.grid(row=1, padx=20, pady=20, sticky="nsew")
         container.grid_rowconfigure(0, weight=1)
@@ -73,8 +73,8 @@ class FrameNavig(ctk.CTkFrame):
         self.frame_start = ctk.CTkFrame(self)
         #ici faire fonction de choix des autres fcts
         #self.frame_start.button = ctk.CTkSwitch(master=self.frame_start, text="Tracking", command=lambda: MuscleTracking(MC.mouvement_clic_muscle, MC.mouvement_saut_muscle),
-        #self.frame_start.button = ctk.CTkSwitch(master=self.frame_start, text="Tracking", command=lambda: StartAllTracking(),
-                                    #onvalue="on", offvalue="off")
+        self.frame_start.button = ctk.CTkSwitch(master=self.frame_start, text="Tracking", command=lambda: StartAllTracking(),
+                                    onvalue="on", offvalue="off")
         self.frame_start.pack(pady=20, padx=20)
         self.frame_start.button.pack(pady=20, padx=30)
         self.button1 = ctk.CTkButton(self, text="Configuration", command=lambda: master.show_frame(FrameConfig))
@@ -101,37 +101,44 @@ class FrameBoutons(ctk.CTkFrame):
         self.grid_columnconfigure(1, weight=1)
         self.grid_columnconfigure(2, weight=1)
 
+        self.labelMain = (ctk.CTkLabel(self, text="Test Commandes", font=("Courrier", 25))
+                          .grid(row=0, padx=20, pady=20, sticky="wn"))
+
         self.button1 = ctk.CTkButton(self, text="Avancer", command=MCavancer)
-        self.button1.grid(row=0, column=1, padx=10, pady=10, sticky="ew")
+        self.button1.grid(row=1, column=1, padx=10, pady=10, sticky="ew")
 
         self.button2 = ctk.CTkButton(self, text="Reculer", command=MCreculer)
-        self.button2.grid(row=1, column=1, padx=10, pady=10, sticky="ew")
+        self.button2.grid(row=2, column=1, padx=10, pady=10, sticky="ew")
 
         self.button3 = ctk.CTkButton(self, text="Gauche", command=MCgauche)
-        self.button3.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
+        self.button3.grid(row=2, column=0, padx=10, pady=10, sticky="ew")
 
         self.button4 = ctk.CTkButton(self, text="Droite", command=MCdroite)
-        self.button4.grid(row=1, column=2, padx=10, pady=10, sticky="ew")
+        self.button4.grid(row=2, column=2, padx=10, pady=10, sticky="ew")
 
 class FrameConfig(ctk.CTkFrame):
     def __init__(self, master):
         ctk.CTkFrame.__init__(self, master)
-        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(0, weight=0)
+        self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
-        self.scrollable_frame = ctk.CTkScrollableFrame(self)
-        self.scrollable_frame.grid(row=0, column=0, sticky="nsew")
+        list = ctk.CTkScrollableFrame(self)
+        list.grid(row=1, column=0, sticky="nsew")
+
+        self.labelMain = (ctk.CTkLabel(self, text="Associer les capteurs aux actions souhaitées", font=("Courrier", 25))
+                          .grid(row=0, column=0, padx=20, pady=20, sticky="nw"))
 
         for i in range(total_rows):
             for j in range(2):
                 if j == 0:
-                    label = ctk.CTkLabel(self.scrollable_frame, text=lst[i][0])
-                    label.grid(row=i, column=j, padx=20, pady=10)
+                    list.e = ctk.CTkLabel(list, text=lst[i][0])
                 else:
                     optionmenu_var = ctk.StringVar(value=lst_selected[i])
-                    option_menu = ctk.CTkOptionMenu(self.scrollable_frame, values=lst[i][1],
-                                                     command=lambda choice, nb=i: write_selected_options(choice, nb),
-                                                     variable=optionmenu_var)
-                    option_menu.grid(row=i, column=j, padx=20, pady=10)
+                    list.e = ctk.CTkOptionMenu(list, values=lst[i][1],
+                                               command=lambda choice, nb=i: write_selected_options(choice, nb),
+                                               variable=optionmenu_var)
+
+                list.e.grid(row=i + 1, column=j, padx=20, pady=10, sticky="w")
 
 
 
@@ -140,33 +147,86 @@ class FrameConfig(ctk.CTkFrame):
 class FrameGuideCapteurs(ctk.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
-
-        self.labelMain = (ctk.CTkLabel(self, text="text", font=("Courrier", 20))
-                          .grid(row=0, padx=20, pady=20))
-
         self.grid_rowconfigure(0, weight=1)
-        self.grid_columnconfigure(0, weight=1)
-        self.labelMain = (ctk.CTkLabel(self, text="Guide des capteurs", font=("Courrier", 20))
-                          .grid(row=0, padx=20, pady=20))
+        self.grid_rowconfigure(1, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+        self.labelMain = (ctk.CTkLabel(self, text="Guide des capteurs", font=("Courrier", 25))
+                          .grid(row=0, padx=20, pady=20, sticky="wn"))
+        self.labelText = (ctk.CTkLabel(self, text="Work in progress\n", font=("Courrier", 20))
+                          .grid(row=1, padx=20, pady=10, sticky="n"))
+
+
 
 class FrameMonProfil(ctk.CTkFrame):
+    def create_profile(self):
+        pseudo = self.entry_pseudo.get()
+        email = self.entry_email.get()
+        password = self.entry_password.get()
+
+        with open("BDD_pseudo.txt", "a") as file:
+            file.write(f"Pseudo: {pseudo}, Email: {email}, Password: {password}\n")
+
+        print("Profil enregistré dans BDD_pseudo.txt.")
+
+    def login(self):
+        pseudo = self.entry_pseudo.get()
+        password = self.entry_password.get()
+
     def __init__(self, master):
         super().__init__(master)
 
-        self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
-        self.labelMain = (ctk.CTkLabel(self, text="Mon profil blabla", font=("Courrier", 20))
-                          .grid(row=0, padx=20, pady=20))
+        self.grid_columnconfigure(1, weight=2)
+        self.labelMain = (ctk.CTkLabel(self, text="Mon profil", font=("Courrier", 25))
+                          .grid(row=1, column=0, padx=20, pady=20, sticky="nw"))
+
+        self.label_pseudo = (ctk.CTkLabel(self, text="Pseudo:", font=("Courrier", 15))
+                             .grid(row=2, column=0, padx=20, pady=10, sticky="nw"))
+        self.entry_pseudo = ctk.CTkEntry(self)
+        self.entry_pseudo.grid(row=2, column=1, padx=20, pady=10, sticky="nw")
+
+        self.label_email = (ctk.CTkLabel(self, text="Email:", font=("Courrier", 15))
+                            .grid(row=3, column=0, padx=20, pady=10, sticky="nw"))
+        self.entry_email = ctk.CTkEntry(self)
+        self.entry_email.grid(row=3, column=1, padx=20, pady=10, sticky="nw")
+
+        self.label_password = (ctk.CTkLabel(self, text="Password:", font=("Courrier", 15))
+                               .grid(row=4, column=0, padx=20, pady=10, sticky="nw"))
+        self.entry_password = ctk.CTkEntry(self, show="*")
+        self.entry_password.grid(row=4, column=1, padx=20, pady=10, sticky="nw")
+
+        self.button_create_profile = ctk.CTkButton(self, text="Créer le profil", command=self.create_profile)
+        self.button_create_profile.grid(row=5, column=1, padx=20, pady=10, sticky="w")
+
+        self.button_login = ctk.CTkButton(self, text="Se connecter", command=self.login)
+        self.button_login.grid(row=5, column=0, padx=20, pady=10, sticky="w")
 
 class FrameNervegear(ctk.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
-        self.labelMain = (ctk.CTkLabel(self, text="text", font=("Courrier", 20))
-                          .grid(row=0, padx=20, pady=20))
-        self.grid_rowconfigure(0, weight=1)
-        self.grid_columnconfigure(0, weight=1)
-        self.labelMain = (ctk.CTkLabel(self, text="Nervegear", font=("Courrier", 20))
-                          .grid(row=0, padx=20, pady=20))
+        self.grid_columnconfigure(1, weight=1)
+        self.labelMain = (ctk.CTkLabel(self, text="Nervegear\n", font=("Courrier", 25))
+                          .grid(row=0, padx=20, pady=10, sticky="nw"))
+        self.labelText = (ctk.CTkLabel(self,
+                                       text="Une nouvelle forme de contrôle \n",
+                                       font=("Courrier", 20))
+                          .grid(row=1, padx=20, pady=10, sticky="s"))
+        self.labelText = (ctk.CTkLabel(self, text="Création d’un produit innovant\nAssociation de plusieurs "
+                                                  "technologies\nCréation d’un logiciel interface Human-Computer",
+                                       font=("Courrier", 15))
+                          .grid(row=2, padx=20, pady=10))
+
+        self.labelText = (ctk.CTkLabel(self,
+                                       text="\nAdaptabilité\n",
+                                       font=("Courrier", 20))
+                          .grid(row=3, padx=20, pady=10, sticky="s"))
+
+        self.labelText = (ctk.CTkLabel(self,
+                                       text="Aux jeux célèbres : \nPossibilité de jouer à plusieurs jeux : Mario, "
+                                            "Minecraft…\n\nA la personne :\nPossibilité d’adapter le logiciel en "
+                                            "fonction de la personne et des positionnements des capteurs",
+                                       font=("Courrier", 15))
+                          .grid(row=4, padx=20, pady=10))
 
 def load_selected_options():
     with open("../ConfigEngine/selected_options.txt", 'r') as file:
