@@ -1,6 +1,7 @@
 from tkinter import *
 
 from Interface.CapteursEngine.BitalinoEngine import MuscleTracking
+from Interface.CapteursEngine.TestCameraRecognition import HeadAndHandTracking
 from Interface.GameEngine.MinecraftTest import MinecraftEngine
 from Interface.CapteursEngine.HeadTiltRecognition import HeadTracking
 from Interface.CapteursEngine.HeadTiltRecognition import HeadEtHandTracking
@@ -322,14 +323,37 @@ def StartAllTracking():
 
 def start_camera(*usages, methodes=None):
     #Déplacement / changer d'objet avec main ou eye tracking
-    print("Démarrage de la caméra.")
-    for usage in usages:
-        print(f"Utilisation de la caméra pour : {usage}")
 
-    if methodes:
-        print("Méthodes spécifiques :")
-        for methode in methodes:
-            print(f"- {methode}")
+    if len(usages) == 1 and methodes[0].strip()=="Camera":
+        HeadAndHandTracking(
+            lambda: MC.mouvement_gauche_droite_cam("gauche"),
+            lambda: MC.mouvement_gauche_droite_cam("milieu"),
+            lambda: MC.mouvement_gauche_droite_cam("droite"),
+            None
+        )
+
+    elif len(usages) ==1 and methodes[0].strip()=="Camera - doigts":
+        HeadAndHandTracking(
+            None,
+            None,
+            None,
+            lambda number: MC.changer_barre(number)
+        )
+
+    elif len(usages) ==1 and methodes[0].strip=="Camera - Eye tracking":
+        print("TO DO EYE TRACKING")
+
+    elif len(usages) == 2:
+        if methodes[1].strip() == "Camera - doigts":
+            HeadAndHandTracking(
+                lambda: MC.mouvement_gauche_droite_cam("gauche"),
+                lambda: MC.mouvement_gauche_droite_cam("milieu"),
+                lambda: MC.mouvement_gauche_droite_cam("droite"),
+                lambda number: MC.changer_barre(number)
+            )
+        else:
+            print("TO DO EYE TRACKING")
+
 
 def start_accelerometre(*usages, methodes=None):
     #Deplacement
@@ -355,17 +379,14 @@ def start_eeg(*usages, methodes=None):
 
 def start_emg(*usages, methodes=None):
     #sauter avec 1 ou 2 implusions , cliquer avec 1 ou 2 implusions
-    print("Démarrage de l'EMG.")
 
     if len(usages)==1 and usages[0] =="Sauter" :
-        print("je lance sauter ")
         if methodes == "EMG - bras 1 impulsion" :
             MuscleTracking(MC.mouvement_saut_muscle)
         if methodes == "EMG - bras 2 impulsions"  :
             MuscleTracking(None, MC.mouvement_saut_muscle)
 
     elif len(usages)==1 and usages[0] =="Clique souris" :
-        print("je lance souris")
         if methodes == "EMG - bras 1 impulsion" :
             MuscleTracking(MC.mouvement_clic_muscle)
         if methodes == "EMG - bras 2 impulsions"  :
@@ -373,12 +394,9 @@ def start_emg(*usages, methodes=None):
 
 
     elif len(usages)==2 :
-        print ("je lance les 2"+"methodes"+methodes[0]+"fin")
         if methodes[0] == "EMG - bras 1 impulsion" :
-            print("je lance sauter 1 et clic 2 emg")
             MuscleTracking(MC.mouvement_saut_muscle, MC.mouvement_clic_muscle)
         if methodes[0] == "EMG - bras 2 impulsions"  :
-            print("je lance sauter 2 et clic 1 emg")
             MuscleTracking(MC.mouvement_clic_muscle, MC.mouvement_saut_muscle)
 
 

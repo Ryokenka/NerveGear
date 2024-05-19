@@ -1,5 +1,5 @@
-Deplacement (touches flechees),Veuillez choisir,Camera          ,Accelerometre
-Vitesse,Veuillez choisir      ,ECG - rythme cardiaque
-Sauter (touche espace),Veuillez choisir         ,EMG - bras une impulsion ,EMG - bras 2 impulsions  ,EEG - clignement des yeux
-Clique souris,Veuillez choisir       ,EMG - bras 1 implusion ,EMG - bras 2 implusions
-Changer d'objet en main,Veuillez choisir     ,Camera - doigts     ,Camera - Eye tracking
+Deplacement (touches flechees),Veuillez choisir,Camera,Accelerometre
+Vitesse,Veuillez choisir,ECG - rythme cardiaque
+Sauter (touche espace),Veuillez choisir,EMG - bras 1 impulsion,EMG - bras 2 impulsions,EEG - clignement des yeux
+Clique souris,Veuillez choisir,EMG - bras 1 implusion,EMG - bras 2 implusions
+Changer d'objet en main,Veuillez choisir,Camera - doigts,Camera - Eye tracking

@@ -38,12 +38,18 @@ class MinecraftEngine :
         Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
         Minecraft.activate()
         if side == "gauche":
+            print("je vais a gauche")
             pt.keyDown("q")
         elif side == "droite":
+            print("je vais a droite")
             pt.keyDown("d")
+        elif side == "milieu":
+            print("je vais tt droit")
+            #pt.keyDown("z")
         else :
             pt.keyUp("q")
             pt.keyUp("d")
+            pt.keyUp("z")
 
     def mouvement_saut_muscle(self):
         Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
@@ -61,7 +67,8 @@ class MinecraftEngine :
         Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
         Minecraft.activate()
         tab = ["&","é",'"',"'","(","-","è","_","ç"]
-        pt.hotkey(tab[number])
+        if number != 0:
+            pt.hotkey(tab[number-1])
 
 
 
