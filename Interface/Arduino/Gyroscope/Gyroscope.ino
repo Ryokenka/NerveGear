@@ -2,7 +2,7 @@
 #include <Wire.h>//https://www.arduino.cc/en/reference/wire
 #include <Adafruit_MPU6050.h>//https://github.com/adafruit/Adafruit_MPU6050
 #include <Adafruit_Sensor.h>//https://github.com/adafruit/Adafruit_Sensor
-
+#include <Streaming.h>
 #include <WiFi.h>
 
 const char* ssid = "CONECTMI";
@@ -34,10 +34,10 @@ void setup() {
   WiFi.begin(ssid, password);
   Serial.println("\nConnecting");
 
-  while(WiFi.status() != WL_CONNECTED){
-      Serial.print(".");
-      delay(100);
-  }
+ // while(WiFi.status() != WL_CONNECTED){
+ //     Serial.print(".");
+ //     delay(100);
+ // }
 
   Serial.println("\nConnected to the WiFi network");
   Serial.print("Local ESP32 IP: ");
@@ -71,5 +71,6 @@ void readMPU( ) { /* function readMPU */
   if (abs(z) > zThreshold) {
     Serial.println("Accélération détectée sur l'axe z");
   }
+  delay(1000);
 
 }
