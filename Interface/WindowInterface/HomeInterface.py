@@ -1,5 +1,6 @@
 from tkinter import *
 
+from Interface.CapteursEngine.AccelerometreEngine import AccelerometreTracking
 from Interface.CapteursEngine.BitalinoEngine import MuscleTracking
 from Interface.CapteursEngine.TestCameraRecognition import HeadAndHandTracking
 from Interface.GameEngine.MinecraftTest import MinecraftEngine
@@ -268,16 +269,16 @@ def StartAllTracking():
 
     # Initialisation du dictionnaire des utilisations des capteurs
     sensor_usage = {
-        "Camera": [],
         "Accelerometre": [],
+        "Camera": [],
         "EEG": [],
         "EMG": [],
         "ECG": []
     }
 
     sensor_methode = {
-        "Camera": [],
         "Accelerometre": [],
+        "Camera": [],
         "EEG": [],
         "EMG": [],
         "ECG": []
@@ -285,12 +286,13 @@ def StartAllTracking():
 
     # Remplissage du dictionnaire des utilisations des capteurs en utilisant les indices de val
     for i, value in enumerate(val):
-        if "Camera" in value:
-            sensor_usage["Camera"].append(sensor_uses[i])
-            sensor_methode["Camera"].append(val[i])
-        elif "Accelerometre" in value:
+        print("zzz",value)
+        if "Accelerometre" in value:
             sensor_usage["Accelerometre"].append(sensor_uses[i])
             sensor_methode["Accelerometre"].append(val[i])
+        elif "Camera" in value:
+            sensor_usage["Camera"].append(sensor_uses[i])
+            sensor_methode["Camera"].append(val[i])
         elif "EEG" in value:
             sensor_usage["EEG"].append(sensor_uses[i])
             sensor_methode["EEG"].append(val[i])
@@ -308,11 +310,12 @@ def StartAllTracking():
 
 
     for sensor, uses in sensor_usage.items():
+        print("aaa",sensor_usage.items())
         if uses:
-            if sensor == "Camera":
-                start_camera(*uses, methodes=sensor_methode["Camera"])
-            elif sensor == "Accelerometre":
+            if sensor == "Accelerometre":
                 start_accelerometre(*uses, methodes=sensor_methode["Accelerometre"])
+            elif sensor == "Camera":
+                start_camera(*uses, methodes=sensor_methode["Camera"])
             elif sensor == "EEG":
                 start_eeg(*uses, methodes=sensor_methode["EEG"])
             elif sensor == "EMG":
@@ -356,6 +359,16 @@ def start_camera(*usages, methodes=None):
 
 
 def start_accelerometre(*usages, methodes=None):
+    print("bbbbbbb",usages)
+    if len(usages) == 1 and methodes[0].strip()=="Accelerometre":
+        AccelerometreTracking(
+            lambda: MC.clic_deplacements("avant"),
+            lambda: MC.clic_deplacements("arriere"),
+            lambda: MC.clic_deplacements("gauche"),
+            lambda: MC.clic_deplacements("droite"),
+            lambda: MC.clic_deplacements("rien")
+        )
+
     #Deplacement
     print("Démarrage de l'accéléromètre.")
     for usage in usages:

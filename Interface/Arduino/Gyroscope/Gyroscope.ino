@@ -63,7 +63,6 @@ void readMPU( ) { /* function readMPU */
   // vérifier si les valeurs d'accélération dépassent les seuils
   if (abs(x) > xThreshold) {
     ( x > 0) ? Serial.println("droite"): Serial.println("Gauche") ;
-    
   }
   if (abs(y) > yThreshold) {
     ( y > 0) ? Serial.println("DEVANT"): Serial.println("DERRIERE") ;

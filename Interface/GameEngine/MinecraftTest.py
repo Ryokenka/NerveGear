@@ -21,13 +21,33 @@ class MinecraftEngine :
         Minecraft.activate()
         pt.hotkey(key_press)
 
-    def clic_toggle(self, key_press):
+    def clic_long(self, key_press):
         Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
         Minecraft.activate()
-        if pt.keyDown(key_press):
-            pt.keyUp(key_press)
+        pt.keyDown(key_press)
+        pt.keyUp(key_press)
+
+    def clic_deplacements(self,side):
+        Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
+        Minecraft.activate()
+        if side == "gauche":
+            pt.keyDown("q")
+            pt.keyUp("d")
+        elif side == "droite":
+            pt.keyDown("d")
+            pt.keyUp("q")
+        elif side == "avant":
+            pt.keyDown("z")
+            pt.keyUp("s")
+        elif side == "arriere":
+            pt.keyDown("s")
+            pt.keyUp("z")
         else:
-            pt.keyDown(key_press)
+            pt.keyUp("q")
+            pt.keyUp("d")
+            pt.keyUp("z")
+            pt.keyUp("s")
+
 
     def clic_parmi_plusieurs_choix(self,number,tab):
         Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
