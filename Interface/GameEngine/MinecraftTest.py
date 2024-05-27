@@ -1,35 +1,39 @@
 from time import sleep
 import pyautogui as pt
 
-class MinecraftEngine : 
-    def __init__(self):
-        print("Init Minecraft")
+class MinecraftEngine:
+    def __init__(self, window_name):
+        self.window_name = window_name
+        print("Init Minecraft with window:", self.window_name)
+
+    def set_window_name(self, window_name):
+        self.window_name = window_name
+
+    def activate_minecraft_window(self):
+        Minecraft = pt.getWindowsWithTitle(self.window_name)[0]
+        Minecraft.activate()
 
     def bouger_perso(self, key_press, duration, action):
         print("Bouger Perso")
-        Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
-        Minecraft.activate()
+        self.activate_minecraft_window()
         if pt.keyDown(key_press):
             pt.keyUp(key_press)
-            print(action+"début")
+            print(action + " début")
         else:
             pt.keyDown(key_press)
-            print(action+"fin")
+            print(action + " fin")
 
     def clic_rapide(self, key_press):
-        Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
-        Minecraft.activate()
+        self.activate_minecraft_window()
         pt.hotkey(key_press)
 
     def clic_long(self, key_press):
-        Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
-        Minecraft.activate()
+        self.activate_minecraft_window()
         pt.keyDown(key_press)
         pt.keyUp(key_press)
 
-    def clic_deplacements(self,side):
-        Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
-        Minecraft.activate()
+    def clic_deplacements(self, side):
+        self.activate_minecraft_window()
         if side == "gauche":
             pt.keyDown("q")
             pt.keyUp("d")
@@ -48,15 +52,12 @@ class MinecraftEngine :
             pt.keyUp("z")
             pt.keyUp("s")
 
-
-    def clic_parmi_plusieurs_choix(self,number,tab):
-        Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
-        Minecraft.activate()
+    def clic_parmi_plusieurs_choix(self, number, tab):
+        self.activate_minecraft_window()
         pt.hotkey(tab[number])
 
     def mouvement_gauche_droite_cam(self, side):
-        Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
-        Minecraft.activate()
+        self.activate_minecraft_window()
         if side == "gauche":
             print("je vais a gauche")
             pt.keyDown("q")
@@ -65,30 +66,30 @@ class MinecraftEngine :
             pt.keyDown("d")
         elif side == "milieu":
             print("je vais tt droit")
-            #pt.keyDown("z")
-        else :
+        else:
             pt.keyUp("q")
             pt.keyUp("d")
             pt.keyUp("z")
 
     def mouvement_saut_muscle(self):
-        Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
-        Minecraft.activate()
+        self.activate_minecraft_window()
         pt.keyDown("space")
         pt.keyUp("space")
 
     def mouvement_clic_muscle(self):
-        Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
-        Minecraft.activate()
+        self.activate_minecraft_window()
         if not pt.leftClick():
             pt.leftClick()
 
-    def changer_barre(self,number):
-        Minecraft = pt.getWindowsWithTitle("Minecraft")[0]
-        Minecraft.activate()
-        tab = ["&","é",'"',"'","(","-","è","_","ç"]
+    def changer_barre(self, number):
+        self.activate_minecraft_window()
+        tab = ["&", "é", '"', "'", "(", "-", "è", "_", "ç"]
         if number != 0:
-            pt.hotkey(tab[number-1])
+            pt.hotkey(tab[number - 1])
+
+# Exemple d'utilisation:
+# minecraft_engine = MinecraftEngine("Minecraft")
+# minecraft_engine.bouger_perso('z', 2, 'avant')
 
 
 

@@ -72,9 +72,17 @@ class App(ctk.CTk):
             self.frames[F] = F(self.mainframe)
             self.frames[F].grid(row=0, column=0, sticky="nsew")
         self.show_frame(FrameConfig)
+        
+        # Initialize MinecraftEngine
+        self.minecraft_engine = MinecraftEngine(self.selected_window.get())
 
     def show_frame(self, cont):
         self.frames[cont].tkraise()
+        
+    def update_minecraft_window(self, *args):
+        selected_window = self.selected_window.get()
+        self.minecraft_engine.set_window_name(selected_window)
+        print(f"Updated Minecraft window to: {selected_window}")
 
     def get_selected_window(self):
         return self.selected_window.get()
