@@ -35,7 +35,10 @@ def load_config(filename):
     
 # Fonction pour sélectionner la fenêtre
 def get_active_windows():
-    return [win.title for win in gw.getAllTitles() if win]
+    # Retrieve all windows
+    windows = gw.getAllTitles()
+    # Filter out empty titles and ensure all entries are strings
+    return [win for win in windows if isinstance(win, str) and win]
 
 #l'interface
 class App(ctk.CTk):
@@ -47,6 +50,9 @@ class App(ctk.CTk):
 
         self.selected_window = StringVar(value="Select a window")
         self.window_list = get_active_windows()
+        
+        # Print the window list to debug
+        print("Window List:", self.window_list)
 
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
