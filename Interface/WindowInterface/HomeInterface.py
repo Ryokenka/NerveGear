@@ -1,4 +1,5 @@
 from tkinter import *
+import pygetwindow as gw
 
 from Interface.CapteursEngine.AccelerometreEngine import AccelerometreTracking
 from Interface.CapteursEngine.BitalinoEngine import MuscleTracking
@@ -31,6 +32,10 @@ def load_config(filename):
             options = row[1:]
             config.append([action, options])
         return config
+    
+# Fonction pour sélectionner la fenêtre
+def get_active_windows():
+    return [win.title for win in gw.getAllTitles() if win]
 
 #l'interface
 class App(ctk.CTk):
@@ -40,20 +45,22 @@ class App(ctk.CTk):
         self.title("Interface Test")
         self.iconbitmap("../Image/LOGO_NVG.ico")
 
+        self.selected_window = StringVar(value="Select a window")
+        self.window_list = get_active_windows()
+
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
         self.frame_navig = FrameNavig(self)
-        self.frame_navig.grid(row=0,column=0, padx=20, pady=20, sticky="ns")
+        self.frame_navig.grid(row=0, column=0, padx=20, pady=20, sticky="ns")
 
         self.mainframe = ctk.CTkFrame(self)
 
-        self.labelMain = (ctk.CTkLabel(self.mainframe, text="Interface de configuration", font=("Courrier", 25, "bold"))
-                          .grid(row=0, padx=20, pady=10))
-        container = ctk.CTkFrame(self.mainframe)
-        container.grid(row=1, padx=20, pady=20, sticky="nsew")
-        container.grid_rowconfigure(0, weight=1)
-        container.grid_columnconfigure(0, weight=1)
+        self.labelMain = ctk.CTkLabel(self.mainframe, text="Interface de configuration", font=("Courrier", 25, "bold"))
+        self.labelMain.grid(row=0, padx=20, pady=10)
+
+        self.dropdown = ctk.CTkOptionMenu(self.mainframe, values=self.window_list, variable=self.selected_window)
+        self.dropdown.grid(row=1, padx=20, pady=20)
 
         self.mainframe.grid(row=0, column=1, padx=20, pady=20, sticky="nsew")
         self.mainframe.grid_columnconfigure(0, weight=1)
@@ -62,12 +69,15 @@ class App(ctk.CTk):
         self.frames = {}
 
         for F in (FrameConfig, FrameBoutons, FrameGuideCapteurs, FrameMonProfil, FrameNervegear):
-            self.frames[F] = F(container)
+            self.frames[F] = F(self.mainframe)
             self.frames[F].grid(row=0, column=0, sticky="nsew")
         self.show_frame(FrameConfig)
 
     def show_frame(self, cont):
         self.frames[cont].tkraise()
+
+    def get_selected_window(self):
+        return self.selected_window.get()
 
 class FrameNavig(ctk.CTkFrame):
     def __init__(self, master):
