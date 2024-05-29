@@ -368,6 +368,7 @@ def start_camera(*usages, methodes=None):
         )
 
     elif len(usages) ==1 and methodes[0].strip=="Camera - Eye tracking":
+        #todo eye tracking
         print("TO DO EYE TRACKING")
 
     elif len(usages) == 2:
@@ -379,6 +380,7 @@ def start_camera(*usages, methodes=None):
                 lambda number: MC.changer_barre(number)
             )
         else:
+            # todo eye tracking
             print("TO DO EYE TRACKING")
 
 

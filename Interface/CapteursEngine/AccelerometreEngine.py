@@ -1,7 +1,9 @@
 import serial
+import paho.mqtt.client as mqtt
 
 def AccelerometreTracking(func_action_avant=None, func_action_arrière=None, func_action_gauche=None, func_action_droite=None, func_action_milieu=None):
-	ser = serial.Serial('COM4', 115200, timeout=1)
+	ser = serial.Serial('COM7', 115200, timeout=1)
+	Client = mqtt.Client("AccelerometerEngine")
 	while True:
 		data = ser.readline().decode('utf-8').strip()
 		print(data)
