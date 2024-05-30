@@ -1,21 +1,22 @@
 from time import sleep
 import pyautogui as pt
 
-class MinecraftEngine:
+class VirtualController:
     def __init__(self, window_name):
         self.window_name = window_name
-        print("Init Minecraft with window:", self.window_name)
+        print("Init Controller with window:", self.window_name)
 
     def set_window_name(self, window_name):
         self.window_name = window_name
+        print("Updating Controller with window:", self.window_name)
 
-    def activate_minecraft_window(self):
+    def activate_selected_window(self):
         Minecraft = pt.getWindowsWithTitle(self.window_name)[0]
         Minecraft.activate()
 
     def bouger_perso(self, key_press, duration, action):
         print("Bouger Perso")
-        self.activate_minecraft_window()
+        self.activate_selected_window()
         if pt.keyDown(key_press):
             pt.keyUp(key_press)
             print(action + " début")
@@ -24,16 +25,16 @@ class MinecraftEngine:
             print(action + " fin")
 
     def clic_rapide(self, key_press):
-        self.activate_minecraft_window()
+        self.activate_selected_window()
         pt.hotkey(key_press)
 
     def clic_long(self, key_press):
-        self.activate_minecraft_window()
+        self.activate_selected_window()
         pt.keyDown(key_press)
         pt.keyUp(key_press)
 
     def clic_deplacements(self, side):
-        self.activate_minecraft_window()
+        self.activate_selected_window()
         if side == "gauche":
             pt.keyDown("q")
             pt.keyUp("d")
@@ -53,11 +54,11 @@ class MinecraftEngine:
             pt.keyUp("s")
 
     def clic_parmi_plusieurs_choix(self, number, tab):
-        self.activate_minecraft_window()
+        self.activate_selected_window()
         pt.hotkey(tab[number])
 
     def mouvement_gauche_droite_cam(self, side):
-        self.activate_minecraft_window()
+        self.activate_selected_window()
         if side == "gauche":
             print("je vais a gauche")
             pt.keyDown("q")
@@ -72,17 +73,17 @@ class MinecraftEngine:
             pt.keyUp("z")
 
     def mouvement_saut_muscle(self):
-        self.activate_minecraft_window()
+        self.activate_selected_window()
         pt.keyDown("space")
         pt.keyUp("space")
 
     def mouvement_clic_muscle(self):
-        self.activate_minecraft_window()
+        self.activate_selected_window()
         if not pt.leftClick():
             pt.leftClick()
 
     def changer_barre(self, number):
-        self.activate_minecraft_window()
+        self.activate_selected_window()
         tab = ["&", "é", '"', "'", "(", "-", "è", "_", "ç"]
         if number != 0:
             pt.hotkey(tab[number - 1])

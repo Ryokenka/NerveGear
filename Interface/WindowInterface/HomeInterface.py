@@ -7,12 +7,12 @@ import pygetwindow as gw
 from Interface.CapteursEngine.AccelerometreEngine import AccelerometreTracking
 from Interface.CapteursEngine.BitalinoEngine import MuscleTracking
 from Interface.CapteursEngine.TestCameraRecognition import HeadAndHandTracking
-from Interface.GameEngine.MinecraftTest import MinecraftEngine
+from Interface.GameEngine.VirtualController import VirtualController
 
 import customtkinter as ctk
 import csv
 #Test des commandes
-MC = MinecraftEngine("Minecraft 1.20.6")
+MC = VirtualController("Minecraft 1.20.6")
 def MCavancer():
     MC.bouger_perso('z', 2, 'avant')
 def MCreculer():
@@ -66,8 +66,6 @@ class App(ctk.CTk):
         self.labelMain = ctk.CTkLabel(self.mainframe, text="Interface de configuration", font=("Courrier", 25, "bold"))
         self.labelMain.grid(row=0, padx=20, pady=10)
 
-        self.dropdown = ctk.CTkOptionMenu(self.mainframe, values=self.window_list, variable=self.selected_window)
-        self.dropdown.grid(row=1, padx=20, pady=20)
 
         self.mainframe.grid(row=0, column=1, padx=20, pady=20, sticky="nsew")
         self.mainframe.grid_columnconfigure(0, weight=1)
@@ -80,16 +78,17 @@ class App(ctk.CTk):
             self.frames[F] = F(self.mainframe)
             self.frames[F].grid(row=0, column=0, sticky="nsew")
         self.show_frame(FrameConfig)
-        
-        # Initialize MinecraftEngine
-        self.minecraft_engine = MinecraftEngine(self.selected_window.get())
+
+        self.dropdown = ctk.CTkOptionMenu(self.frames[FrameConfig], values=self.window_list, variable=self.selected_window, command=self.update_minecraft_window)
+        self.dropdown.grid(row=1, padx=20, pady=20)
+
 
     def show_frame(self, cont):
         self.frames[cont].tkraise()
         
     def update_minecraft_window(self, *args):
         selected_window = self.selected_window.get()
-        self.minecraft_engine.set_window_name(selected_window)
+        MC.set_window_name(selected_window)
         print(f"Updated Minecraft window to: {selected_window}")
 
     def get_selected_window(self):
@@ -320,8 +319,6 @@ def check_and_start_tracking(self):
         else:
             print("pas trouvé")
 
-
-        print("ttt: "+str(app.frames[FrameNavig].switch_var.get()))#bien false mais le bouton est on
 
 
 def isChoicesValid():

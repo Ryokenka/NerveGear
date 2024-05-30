@@ -2,7 +2,7 @@ import cv2 as cv
 import numpy as np
 import mediapipe as mp
 
-from Interface.GameEngine.MinecraftTest import MinecraftEngine
+from Interface.GameEngine.VirtualController import MinecraftEngine
 
 
 
