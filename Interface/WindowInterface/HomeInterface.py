@@ -1,3 +1,4 @@
+import threading
 from tkinter import *
 import pygetwindow as gw
 
@@ -5,13 +6,11 @@ from Interface.CapteursEngine.AccelerometreEngine import AccelerometreTracking
 from Interface.CapteursEngine.BitalinoEngine import MuscleTracking
 from Interface.CapteursEngine.TestCameraRecognition import HeadAndHandTracking
 from Interface.GameEngine.MinecraftTest import MinecraftEngine
-from Interface.CapteursEngine.HeadTiltRecognition import HeadTracking
-from Interface.CapteursEngine.HeadTiltRecognition import HeadEtHandTracking
 
 import customtkinter as ctk
 import csv
 #Test des commandes
-MC = MinecraftEngine()
+MC = MinecraftEngine("Minecraft 1.20.6")
 def MCavancer():
     MC.bouger_perso('z', 2, 'avant')
 def MCreculer():
@@ -331,22 +330,27 @@ def StartAllTracking():
         else:
             print("Choix non reconnu :", value)
 
-
+    tabthread = []
 
     for sensor, uses in sensor_usage.items():
-        print("aaa",sensor_usage.items())
         if uses:
-            if sensor == "Accelerometre":
-                start_accelerometre(*uses, methodes=sensor_methode["Accelerometre"])
-            elif sensor == "Camera":
-                start_camera(*uses, methodes=sensor_methode["Camera"])
+            if sensor == "Camera":
+                tabthread.append(threading.Thread(target=start_camera(*uses, methodes=sensor_methode["Camera"])))
+            elif sensor == "Accelerometre":
+                tabthread.append(
+                    threading.Thread(target=start_accelerometre(*uses, methodes=sensor_methode["Accelerometre"])))
             elif sensor == "EEG":
-                start_eeg(*uses, methodes=sensor_methode["EEG"])
+                tabthread.append(threading.Thread(target=start_eeg(*uses, methodes=sensor_methode["EEG"])))
             elif sensor == "EMG":
-                start_emg(*uses, methodes=sensor_methode["EMG"])
+                tabthread.append(threading.Thread(target=start_emg(*uses, methodes=sensor_methode["EMG"])))
             elif sensor == "ECG":
-                start_ecg(*uses, methodes=sensor_methode["ECG"])
+                tabthread.append(threading.Thread(target=start_eeg(*uses, methodes=sensor_methode["ECG"])))
 
+    for thread in tabthread:
+        thread.start()
+
+    for thread in tabthread:
+        thread.join()
 
 def start_camera(*usages, methodes=None):
     #Déplacement / changer d'objet avec main ou eye tracking
