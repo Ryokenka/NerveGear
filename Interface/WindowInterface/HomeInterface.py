@@ -1,8 +1,8 @@
 import threading
 from tkinter import *
+from typing import Dict, List, Any
 
 import pygetwindow as gw
-
 
 from Interface.CapteursEngine.AccelerometreEngine import AccelerometreTracking
 from Interface.CapteursEngine.BitalinoEngine import MuscleTracking
@@ -72,7 +72,6 @@ class App(ctk.CTk):
 
         self.frames = {}
 
-
         for F in (FrameConfig, FrameBoutons, FrameGuideCapteurs, FrameMonProfil, FrameNervegear):
             self.frames[F] = F(self.mainframe)
             self.frames[F].grid(row=0, column=0, sticky="nsew")
@@ -80,7 +79,6 @@ class App(ctk.CTk):
 
         self.dropdown = ctk.CTkOptionMenu(self.frames[FrameConfig], values=self.window_list, variable=self.selected_window, command=self.update_minecraft_window)
         self.dropdown.grid(row=1, padx=20, pady=20)
-
 
     def show_frame(self, cont):
         self.frames[cont].tkraise()
@@ -355,7 +353,7 @@ def StartAllTracking():
         "ECG": []
     }
 
-    sensor_methode = {
+    sensor_methode: Dict[str, List[Any]] = {
         "Accelerometre": [],
         "Camera": [],
         "EEG": [],
@@ -390,26 +388,26 @@ def StartAllTracking():
     for sensor, uses in sensor_usage.items():
         if uses:
             if sensor == "Camera":
-                tabthread.append(threading.Thread(target=start_camera(*uses, methodes=sensor_methode["Camera"])))
+                tabthread.append(threading.Thread(target=start_camera,args=(sensor_methode["Camera"],*uses,), name= "Camera"))
             elif sensor == "Accelerometre":
                 tabthread.append(
-                    threading.Thread(target=start_accelerometre(*uses, methodes=sensor_methode["Accelerometre"])))
+                    threading.Thread(target=start_accelerometre,args=(sensor_methode["Accelerometre"], *uses,), name="Accelerometre"))
             elif sensor == "EEG":
-                tabthread.append(threading.Thread(target=start_eeg(*uses, methodes=sensor_methode["EEG"])))
+                tabthread.append(threading.Thread(target=start_eeg,args=(sensor_methode["EEG"],*uses,), name="EEG"))
             elif sensor == "EMG":
-                tabthread.append(threading.Thread(target=start_emg(*uses, methodes=sensor_methode["EMG"])))
+                tabthread.append(threading.Thread(target=start_emg,args=(sensor_methode["EMG"],*uses,), name="EMG"))
             elif sensor == "ECG":
-                tabthread.append(threading.Thread(target=start_eeg(*uses, methodes=sensor_methode["ECG"])))
+                tabthread.append(threading.Thread(target=start_eeg,args=(sensor_methode["ECG"],*uses,), name="ECG"))
 
     for thread in tabthread:
+        print("Démarrage du thread", thread.name)
         thread.start()
 
     for thread in tabthread:
         thread.join()
+    print("Fin de la configuration des capteurs")
 
-
-
-def start_camera(*usages, methodes=None):
+def start_camera(methodes=None, *usages ):
     #Déplacement / changer d'objet avec main ou eye tracking
 
     if len(usages) == 1 and methodes[0].strip()=="Camera":
@@ -445,7 +443,7 @@ def start_camera(*usages, methodes=None):
             print("TO DO EYE TRACKING")
 
 
-def start_accelerometre(*usages, methodes=None):
+def start_accelerometre(methodes=None, *usages):
     if len(usages) == 1 and methodes[0].strip()=="Accelerometre":
         AccelerometreTracking(
             lambda: MC.clic_deplacements("avant"),
@@ -466,7 +464,7 @@ def start_accelerometre(*usages, methodes=None):
             print(f"- {methode}")
 
 
-def start_eeg(*usages, methodes=None):
+def start_eeg( methodes=None,*usages):
     #Sauter
     print("Démarrage de l'EEG.")
     for usage in usages:
@@ -476,7 +474,7 @@ def start_eeg(*usages, methodes=None):
         for methode in methodes:
             print(f"- {methode}")
 
-def start_emg(*usages, methodes=None):
+def start_emg(methodes=None, *usages,):
     #sauter avec 1 ou 2 implusions , cliquer avec 1 ou 2 implusions
 
     if len(usages)==1 and usages[0] =="Sauter" :
@@ -500,7 +498,7 @@ def start_emg(*usages, methodes=None):
 
 
 
-def start_ecg(*usages, methodes=None):
+def start_ecg(methodes=None, *usages):
     #vitesse
     print("Démarrage de l'ECG.")
     for usage in usages:
