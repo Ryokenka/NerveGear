@@ -1,6 +1,8 @@
 import threading
 from tkinter import *
+
 import pygetwindow as gw
+
 
 from Interface.CapteursEngine.AccelerometreEngine import AccelerometreTracking
 from Interface.CapteursEngine.BitalinoEngine import MuscleTracking
@@ -73,6 +75,7 @@ class App(ctk.CTk):
 
         self.frames = {}
 
+
         for F in (FrameConfig, FrameBoutons, FrameGuideCapteurs, FrameMonProfil, FrameNervegear):
             self.frames[F] = F(self.mainframe)
             self.frames[F].grid(row=0, column=0, sticky="nsew")
@@ -93,15 +96,26 @@ class App(ctk.CTk):
         return self.selected_window.get()
 
 class FrameNavig(ctk.CTkFrame):
+
     def __init__(self, master):
         super().__init__(master)
         self.frame_start = ctk.CTkFrame(self)
-        #ici faire fonction de choix des autres fcts
+        #brouillon : ici faire fonction de choix des autres fcts
         #self.frame_start.button = ctk.CTkSwitch(master=self.frame_start, text="Tracking", command=lambda: MuscleTracking(MC.mouvement_clic_muscle, MC.mouvement_saut_muscle),
-        self.frame_start.button = ctk.CTkSwitch(master=self.frame_start, text="Tracking", command=lambda: StartAllTracking(),
-                                    onvalue="on", offvalue="off")
+        #self.frame_start.button = ctk.CTkSwitch(master=self.frame_start, text="Tracking", command=lambda: StartAllTracking(),
+                                    #onvalue="on", offvalue="off")
+
+
+        self.switch_var = ctk.BooleanVar(value=False)
+        self.buttonTracking = ctk.CTkSwitch(master=self.frame_start, text="Tracking",
+                                                    variable=self.switch_var,
+                                                    #command = lambda: switch(),
+                                                    command=lambda: check_and_start_tracking(self),
+                                                    onvalue=True, offvalue=False)
+
+
         self.frame_start.pack(pady=20, padx=20)
-        self.frame_start.button.pack(pady=20, padx=30)
+        self.buttonTracking.pack(pady=20, padx=30)
         self.button1 = ctk.CTkButton(self, text="Configuration", command=lambda: master.show_frame(FrameConfig))
         self.button1.pack(pady=20, padx=20)
 
@@ -117,6 +131,8 @@ class FrameNavig(ctk.CTkFrame):
 
         self.button_nervegear = ctk.CTkButton(self, text="Nervegear", command=lambda: master.show_frame(FrameNervegear))
         self.button_nervegear.pack(pady=20, padx=20)
+
+
 
 class FrameBoutons(ctk.CTkFrame):
     def __init__(self, master):
@@ -145,13 +161,20 @@ class FrameConfig(ctk.CTkFrame):
     def __init__(self, master):
         ctk.CTkFrame.__init__(self, master)
         self.grid_rowconfigure(0, weight=0)
-        self.grid_rowconfigure(1, weight=1)
+        self.grid_rowconfigure(1, weight=0)
+        self.grid_rowconfigure(2, weight=1)
         self.grid_columnconfigure(0, weight=1)
         list = ctk.CTkScrollableFrame(self)
-        list.grid(row=1, column=0, sticky="nsew")
+        list.grid(row=2, column=0, sticky="nsew")
+
+        self.error_label = ctk.CTkLabel(self, text="", font=("Courrier", 12), text_color="Red")
+        self.error_label.grid(row=1,column=0, padx=0, pady=0, sticky="nw")
+
 
         self.labelMain = (ctk.CTkLabel(self, text="Associer les capteurs aux actions souhaitées", font=("Courrier", 25))
                           .grid(row=0, column=0, padx=20, pady=20, sticky="nw"))
+
+
 
         for i in range(total_rows):
             for j in range(2):
@@ -165,6 +188,10 @@ class FrameConfig(ctk.CTkFrame):
 
                 list.e.grid(row=i + 1, column=j, padx=20, pady=10, sticky="w")
 
+
+    def show_error(self, message):
+        self.error_label.configure(text=message)
+        self.error_label.lift()
 
 
 
@@ -226,6 +253,9 @@ class FrameMonProfil(ctk.CTkFrame):
         self.button_login = ctk.CTkButton(self, text="Se connecter", command=self.login)
         self.button_login.grid(row=5, column=0, padx=20, pady=10, sticky="w")
 
+
+
+
 class FrameNervegear(ctk.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
@@ -273,13 +303,43 @@ def write_selected_options(choice, i):
                 f.write(f'{choice}\n')
             else:
                 f.write(line)
+
+def check_and_start_tracking(self):
+    if isChoicesValid():
+         StartAllTracking()
+         app.frames[FrameConfig].show_error("")
+    else:
+        app.frames[FrameConfig].show_error("Certains choix sont invalides")
+        #app.frames[FrameNavig].switch_var = ctk.BooleanVar(value=False)
+
+        bouton_trouve = self.buttonTracking
+
+        if bouton_trouve is not None:
+            bouton_trouve.deselect()
+            print(bouton_trouve)
+        else:
+            print("pas trouvé")
+
+
+        print("ttt: "+str(app.frames[FrameNavig].switch_var.get()))#bien false mais le bouton est on
+
+
+def isChoicesValid():
+    print("isChoicesValid")
+    val = load_selected_options()
+    if all(choice == "Veuillez choisir" for choice in val):
+        print("Tous les choix sont 'Veuillez choisir'.")
+        return False
+
+    #todo : ajouter les autres vérifications : ex : ?
+
+    else :
+        print("Tous les choix sont valides")
+        return True
 def StartAllTracking():
     print("StartAllTracking\n")
-
     val = load_selected_options()
 
-    for i, value in enumerate(val):
-        print(f"Valeur {i + 1} :", value)
 
     # Liste des utilisations des capteurs
     sensor_uses = [
@@ -309,7 +369,6 @@ def StartAllTracking():
 
     # Remplissage du dictionnaire des utilisations des capteurs en utilisant les indices de val
     for i, value in enumerate(val):
-        print("zzz",value)
         if "Accelerometre" in value:
             sensor_usage["Accelerometre"].append(sensor_uses[i])
             sensor_methode["Accelerometre"].append(val[i])
@@ -352,6 +411,8 @@ def StartAllTracking():
     for thread in tabthread:
         thread.join()
 
+
+
 def start_camera(*usages, methodes=None):
     #Déplacement / changer d'objet avec main ou eye tracking
 
@@ -389,7 +450,6 @@ def start_camera(*usages, methodes=None):
 
 
 def start_accelerometre(*usages, methodes=None):
-    print("bbbbbbb",usages)
     if len(usages) == 1 and methodes[0].strip()=="Accelerometre":
         AccelerometreTracking(
             lambda: MC.clic_deplacements("avant"),
