@@ -84,7 +84,7 @@ class VirtualController:
 
     def changer_barre(self, number):
         self.activate_selected_window()
-        tab = ["&", "é", '"', "'", "(", "-", "è", "_", "ç"]
+        tab = ['&', ')', '"', "'", '(', '-', '=', '_', '$',"*"]
         if number != 0:
             pt.hotkey(tab[number - 1])
 

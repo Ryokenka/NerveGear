@@ -66,10 +66,9 @@ class App(ctk.CTk):
         self.labelMain = ctk.CTkLabel(self.mainframe, text="Interface de configuration", font=("Courrier", 25, "bold"))
         self.labelMain.grid(row=0, padx=20, pady=10)
 
-
         self.mainframe.grid(row=0, column=1, padx=20, pady=20, sticky="nsew")
         self.mainframe.grid_columnconfigure(0, weight=1)
-        self.mainframe.grid_rowconfigure(1, weight=1)
+        self.mainframe.grid_rowconfigure(0, weight=1)
 
         self.frames = {}
 

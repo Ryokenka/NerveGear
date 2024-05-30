@@ -84,6 +84,54 @@ def detect_hand(frame, hands, mp_drawing, func_action_doigts):
 
     return frame
 
+def detect_2hand(frame, hands, mp_drawing, func_action_doigts):
+    rgb_frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
+    results = hands.process(rgb_frame)
+    mp_drawing = mp.solutions.drawing_utils
+    mp_hands = mp.solutions.hands
+
+    if results.multi_hand_landmarks:
+        left_hand_fingers = 0
+        right_hand_fingers = 0
+        for landmarks in results.multi_hand_landmarks:
+            thumb_tip = landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP]
+            index_tip = landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
+            middle_tip = landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP]
+            ring_tip = landmarks.landmark[mp_hands.HandLandmark.RING_FINGER_TIP]
+            pinky_tip = landmarks.landmark[mp_hands.HandLandmark.PINKY_TIP]
+
+            index_finger_MCP = landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP]
+            index_dip = landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_DIP]
+            middle_dip = landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_DIP]
+            ring_dip = landmarks.landmark[mp_hands.HandLandmark.RING_FINGER_DIP]
+            pinky_dip = landmarks.landmark[mp_hands.HandLandmark.PINKY_DIP]
+
+            finger_states_tip = [thumb_tip, index_tip, middle_tip, ring_tip, pinky_tip]
+            finger_states_dip = [index_finger_MCP, index_dip, middle_dip, ring_dip, pinky_dip]
+
+            # Compter les doigts levés pour chaque main
+            if landmarks.landmark[mp_hands.HandLandmark.WRIST].x < landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_MCP].x:
+                # Main gauche
+                left_hand_fingers += sum(
+                    1 for i in range(len(finger_states_tip)) if finger_states_tip[i].y < finger_states_dip[i].y)
+            else:
+                # Main droite
+                right_hand_fingers += sum(
+                    1 for i in range(len(finger_states_tip)) if finger_states_tip[i].y < finger_states_dip[i].y)
+
+            mp_drawing.draw_landmarks(frame, landmarks, mp_hands.HAND_CONNECTIONS)
+
+        # Afficher le nombre de doigts levés pour chaque main
+        font = cv.FONT_HERSHEY_SIMPLEX
+        cv.putText(frame, f'Left hand: {left_hand_fingers}', (20, 40), font, 1, (0, 255, 0), 2, cv.LINE_AA)
+        cv.putText(frame, f'Right hand: {right_hand_fingers}', (20, 80), font, 1, (0, 255, 0), 2, cv.LINE_AA)
+
+        # Appeler la fonction d'action si au moins une main a des doigts levés
+        if (left_hand_fingers > 0 or right_hand_fingers > 0) and func_action_doigts:
+            print(left_hand_fingers, right_hand_fingers, left_hand_fingers+right_hand_fingers)
+            func_action_doigts(left_hand_fingers+right_hand_fingers)
+
+    return frame
 
 def HeadAndHandTracking(func_action_gauche=None, func_action_droit=None, func_action_milieu=None,
                         func_action_doigts=None):
@@ -94,7 +142,7 @@ def HeadAndHandTracking(func_action_gauche=None, func_action_droit=None, func_ac
     mp_drawing = mp.solutions.drawing_utils
     mp_hands = mp.solutions.hands
 
-    with mp_hands.Hands(static_image_mode=False, max_num_hands=1, min_detection_confidence=0.5) as hands:
+    with mp_hands.Hands(static_image_mode=False, max_num_hands=2, min_detection_confidence=0.8) as hands:
         while capture.isOpened():
             ret, frame = capture.read()
             if not ret:
@@ -108,7 +156,7 @@ def HeadAndHandTracking(func_action_gauche=None, func_action_droit=None, func_ac
 
             # Détecter les mains
             if func_action_doigts:
-                frame = detect_hand(frame, hands, mp_drawing, func_action_doigts)
+                frame = detect_2hand(frame, hands, mp_drawing, func_action_doigts)
 
             cv.imshow('Head and Hand Tracking', frame)
             if cv.waitKey(1) & 0xFF == 27:  # Press 'Esc' to exit
