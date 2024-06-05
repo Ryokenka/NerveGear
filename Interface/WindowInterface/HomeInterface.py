@@ -8,6 +8,7 @@ from Interface.CapteursEngine.BitalinoEngine import MuscleTracking
 from Interface.CapteursEngine.TestCameraRecognition import HeadAndHandTracking
 from Interface.GameEngine.VirtualController import VirtualController
 
+
 import customtkinter as ctk
 import csv
 # Test des commandes
@@ -71,12 +72,16 @@ class App(ctk.CTk):
 
         self.frames = {}
 
-        for F in (FrameConfig, FrameBoutons, FrameGuideCapteurs, FrameMonProfil, FrameNervegear):
+        for F in (FrameConfig,FrameConfigAdvance, FrameBoutons, FrameGuideCapteurs, FrameMonProfil, FrameNervegear):
             self.frames[F] = F(self.mainframe)
             self.frames[F].grid(row=0, column=0, sticky="nsew")
         self.show_frame(FrameConfig)
 
         self.dropdown = ctk.CTkOptionMenu(self.frames[FrameConfig], values=self.window_list, variable=self.selected_window, command=self.update_minecraft_window)
+        self.dropdown.grid(row=1, padx=20, pady=20)
+
+        self.dropdown = ctk.CTkOptionMenu(self.frames[FrameConfigAdvance], values=self.window_list,
+                                          variable=self.selected_window, command=self.update_minecraft_window)
         self.dropdown.grid(row=1, padx=20, pady=20)
 
     def show_frame(self, cont):
@@ -113,6 +118,9 @@ class FrameNavig(ctk.CTkFrame):
         self.buttonTracking.pack(pady=20, padx=30)
         self.button1 = ctk.CTkButton(self, text="Configuration", command=lambda: master.show_frame(FrameConfig))
         self.button1.pack(pady=20, padx=20)
+
+        self.button12 = ctk.CTkButton(self, text="Configuration Avancée", command=lambda: master.show_frame(FrameConfigAdvance))
+        self.button12.pack(pady=20, padx=20)
 
         self.button2 = ctk.CTkButton(self, text="Test Commandes", command=lambda: master.show_frame(FrameBoutons))
         self.button2.pack(pady=20, padx=20)
@@ -169,6 +177,18 @@ class FrameConfig(ctk.CTkFrame):
         self.labelMain = (ctk.CTkLabel(self, text="Associer les capteurs aux actions souhaitées", font=("Courrier", 25))
                           .grid(row=0, column=0, padx=20, pady=20, sticky="nw"))
 
+        self.switch_var = ctk.BooleanVar(value=False)
+        self.buttonActivate = ctk.CTkSwitch(master=self, text="Activer",
+                                            variable=self.switch_var,
+                                            command = lambda: self.toggle_sync(),
+
+                                            onvalue=True, offvalue=False)
+        self.buttonActivate.grid(row=0, column=0, padx=20, pady=20, sticky="ne")
+
+        print("INIT bout : " + str(self.switch_var.get()))
+
+
+
 
 
         for i in range(total_rows):
@@ -188,7 +208,102 @@ class FrameConfig(ctk.CTkFrame):
         self.error_label.configure(text=message)
         self.error_label.lift()
 
+    def toggle_sync(self):
 
+        if self.switch_var.get() == False:
+            self.buttonActivate.deselect()
+            app.frames[FrameConfigAdvance].buttonActivate.select()
+        else:
+            self.buttonActivate.select()
+            app.frames[FrameConfigAdvance].buttonActivate.deselect()
+
+
+
+class FrameConfigAdvance(ctk.CTkFrame):
+    def __init__(self, master):
+        ctk.CTkFrame.__init__(self, master)
+        self.grid_rowconfigure(0, weight=0)
+        self.grid_rowconfigure(1, weight=0)
+        self.grid_rowconfigure(2, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        list_frame = ctk.CTkScrollableFrame(self)
+        list_frame.grid(row=2, column=0, sticky="nsew")
+
+        self.error_label = ctk.CTkLabel(self, text="je suis une erreur test", font=("Courrier", 12), text_color="Red")
+        self.error_label.grid(row=1,column=0,padx=20, pady=20 , sticky="nw")
+
+        self.switch_var = ctk.BooleanVar(value=False)
+        self.buttonActivate = ctk.CTkSwitch(master=self, text="Activer",
+                                            variable=self.switch_var,
+                                            command = lambda: self.toggle_sync(),
+
+                                            onvalue=True, offvalue=False)
+        self.buttonActivate.grid(row=0, column=0, padx=20, pady=20, sticky="ne")
+        print("INIT bout : " + str(self.switch_var.get()))
+
+
+
+
+        self.labelMain = (ctk.CTkLabel(self, text="Configuration avancée", font=("Courrier", 25))
+                          .grid(row=0, column=0, padx=20, pady=20, sticky="nw"))
+
+
+        list_frame.labelTouches = ctk.CTkLabel(list_frame, text="Touches", font=("Courrier", 18))
+        list_frame.labelTouches.grid(row=0, column=0, padx=20, pady=10, sticky="w")
+
+        list_frame.labelCapteurs = ctk.CTkLabel(list_frame, text="Capteurs", font=("Courrier", 18))
+        list_frame.labelCapteurs.grid(row=0, column=1, padx=20, pady=10, sticky="w")
+
+        capteurs_list = []
+        with open('../ConfigEngine/capteurs_list.csv', mode='r', newline='') as file:
+            reader = csv.reader(file)
+            capteurs_list = [row[0] for row in reader]
+
+        total_rows_advance = len(capteurs_list)
+        self.lstTouchesJoueur = [''] * total_rows_advance
+        self.capteurs_list = [''] * total_rows_advance  # Liste pour stocker les capteurs sélectionnés
+
+        for i in range(total_rows_advance):
+
+            entry_var = ctk.StringVar()
+            entry = ctk.CTkEntry(list_frame, textvariable=entry_var)
+            entry.grid(row=i + 1, column=0, padx=20, pady=10, sticky="w")
+
+
+            def update_lstTouchesJoueur(event, row=i, var=entry_var):
+                self.lstTouchesJoueur[row] = var.get()
+
+            entry.bind('<KeyRelease>', update_lstTouchesJoueur)
+
+
+            optionmenu_var = ctk.StringVar(value=capteurs_list[0])
+            option_menu = ctk.CTkOptionMenu(list_frame, values=capteurs_list,
+                                             command=lambda choice, nb=i: self.write_selected_options(choice,                                                    nb),
+                                             variable=optionmenu_var)
+
+            option_menu.grid(row=i + 1, column=1, padx=20, pady=10, sticky="w")
+
+
+    def show_error(self, message):
+        self.error_label.configure(text=message)
+        self.error_label.lift()
+
+    def write_selected_options(self, choice, nb):
+        self.capteurs_list[nb] = choice
+
+    def get_touches_and_capteurs(self):
+        # Retourne une liste de paires (touche, capteur)
+        print("totale : "+str(list(zip(self.lstTouchesJoueur, self.capteurs_list))))
+        return list(zip(self.lstTouchesJoueur, self.capteurs_list))
+
+    def toggle_sync(self):
+
+        if self.switch_var.get() == False:
+            self.buttonActivate.deselect()
+            app.frames[FrameConfig].buttonActivate.select()
+        else:
+            self.buttonActivate.select()
+            app.frames[FrameConfig].buttonActivate.deselect()
 
 
 class FrameGuideCapteurs(ctk.CTkFrame):
