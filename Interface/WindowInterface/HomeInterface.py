@@ -560,16 +560,15 @@ def StartAllTracking():
             if sensor == "Accelerometre":
                 print(sensor_methode)
                 tabthread.append(start_accelerometre(sensor_methode["Accelerometre"],*uses))
-
                 #tabthread.append(start_accelerometre(methodes=sensor_methode["Accelerometre"],*uses ))
             elif sensor == "Camera":
                 tabthread.append(start_camera(sensor_methode["Camera"], *uses))
             elif sensor == "EEG":
-                tabthread.append(start_eeg(*uses, methodes=sensor_methode["EEG"]))
+                tabthread.append(start_eeg(sensor_methode["EEG"],*uses))
             elif sensor == "EMG":
-                tabthread.append(start_emg(*uses, methodes=sensor_methode["EMG"]))
+                tabthread.append(start_emg(sensor_methode["EMG"], *uses))
             elif sensor == "ECG":
-                tabthread.append(start_ecg(*uses, methodes=sensor_methode["ECG"]))
+                tabthread.append(start_ecg(sensor_methode["ECG"],*uses))
 
     with Pool(cpu_count()) as pool:
         pool.map_async(lambda f: f(), tabthread)
@@ -659,25 +658,24 @@ def start_eeg( methodes=None,*usages):
 
 def start_emg(methodes=None, *usages,):
     #sauter avec 1 ou 2 implusions , cliquer avec 1 ou 2 implusions
-
+    print("EMG")
     if len(usages)==1 and usages[0] =="Sauter" :
-        if methodes == "EMG - bras 1 impulsion" :
-            MuscleTracking(MC.mouvement_saut_muscle)
-        if methodes == "EMG - bras 2 impulsions"  :
-            MuscleTracking(None, MC.mouvement_saut_muscle)
+        if methodes[0] == "EMG - bras 1 impulsion" :
+            MuscleTracking(lambda: MC.mouvement_saut_muscle)
+        if methodes[0] == "EMG - bras 2 impulsions"  :
+            MuscleTracking(None, lambda: MC.mouvement_saut_muscle)
 
     elif len(usages)==1 and usages[0] =="Clique souris" :
-        if methodes == "EMG - bras 1 impulsion" :
-            MuscleTracking(MC.mouvement_clic_muscle)
-        if methodes == "EMG - bras 2 impulsions"  :
-            MuscleTracking(None, MC.mouvement_clic_muscle)
-
+        if methodes[0] == "EMG - bras 1 impulsion" :
+            MuscleTracking(lambda: MC.mouvement_clic_muscle)
+        if methodes[0] == "EMG - bras 2 impulsions"  :
+            MuscleTracking(None, lambda: MC.mouvement_clic_muscle)
 
     elif len(usages)==2 :
         if methodes[0] == "EMG - bras 1 impulsion" :
-            MuscleTracking(MC.mouvement_saut_muscle, MC.mouvement_clic_muscle)
+            MuscleTracking(lambda: MC.mouvement_saut_muscle, lambda: MC.mouvement_clic_muscle)
         if methodes[0] == "EMG - bras 2 impulsions"  :
-            MuscleTracking(MC.mouvement_clic_muscle, MC.mouvement_saut_muscle)
+            MuscleTracking(lambda: MC.mouvement_clic_muscle, lambda: MC.mouvement_saut_muscle)
 
 
 

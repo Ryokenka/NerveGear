@@ -34,7 +34,7 @@ void setup() {
 
 void loop() {
   reconnect();
-  char* data = readMPU();
+  String data = readMPU();
   client.loop(); 
   mqtt_publish("MIN1",data);
   Serial.print("qqchose : ");
@@ -94,7 +94,7 @@ void reconnect(){
 }
 
 //Fonction pour publier un float sur un topic
-void mqtt_publish(String topic, char* t){
+void mqtt_publish(String topic, String t){
   char top[topic.length()+1];
   topic.toCharArray(top,topic.length()+1);
   char t_char[50];
@@ -105,27 +105,29 @@ void mqtt_publish(String topic, char* t){
 
 
 //Lire accéléromètre
-char* readMPU() { /* function readMPU */
+String readMPU() { /* function readMPU */
  	////Read acceleromter data
  	sensors_event_t a, g, temp;
  	mpu.getEvent(&a, &g, &temp);
 
-  char* data;
+  String data="";
   int x = a.acceleration.x;
   int y = a.acceleration.y;
   int z = a.acceleration.z;
 
   // vérifier si les valeurs d'accélération dépassent les seuils
+
   if (abs(x) > xThreshold) {
-    ( x > 0) ? data = "DROITE": data="GAUCHE" ;
+    ( x > 0) ? data.concat("g"): data.concat("d") ;
     
   }
   if (abs(y) > yThreshold) {
-    ( y > 0) ? data= "AVANT": data= "ARRIERE" ;
+    ( y > 0) ? data.concat("av"): data.concat("ar") ;
   }
   if (abs(z) > zThreshold) {
-    Serial.println("Accélération détectée sur l'axe z");
+    data="jump";
   }
+  
   return data;
 
 }
