@@ -49,7 +49,7 @@ class App(ctk.CTk):
         self.title("Interface Test")
         self.iconbitmap("../Image/LOGO_NVG.ico")
 
-        self.selected_window = StringVar(value="Select a window")
+        self.selected_window = StringVar(value="Choisir fenêtre")
         self.window_list = get_active_windows()
         
         # Print the window list to debug
@@ -78,11 +78,11 @@ class App(ctk.CTk):
         self.show_frame(FrameConfig)
 
         self.dropdown = ctk.CTkOptionMenu(self.frames[FrameConfig], values=self.window_list, variable=self.selected_window, command=self.update_minecraft_window)
-        self.dropdown.grid(row=1, padx=20, pady=20)
+        self.dropdown.grid(row=1, padx=20, pady=20 , sticky = "ne")
 
         self.dropdown = ctk.CTkOptionMenu(self.frames[FrameConfigAdvance], values=self.window_list,
                                           variable=self.selected_window, command=self.update_minecraft_window)
-        self.dropdown.grid(row=1, padx=20, pady=20)
+        self.dropdown.grid(row=1, padx=20, pady=20, sticky = "ne")
 
     def show_frame(self, cont):
         self.frames[cont].tkraise()
@@ -229,7 +229,7 @@ class FrameConfigAdvance(ctk.CTkFrame):
         list_frame = ctk.CTkScrollableFrame(self)
         list_frame.grid(row=2, column=0, sticky="nsew")
 
-        self.error_label = ctk.CTkLabel(self, text="je suis une erreur test", font=("Courrier", 12), text_color="Red")
+        self.error_label = ctk.CTkLabel(self, text="", font=("Courrier", 12), text_color="Red")
         self.error_label.grid(row=1,column=0,padx=20, pady=20 , sticky="nw")
 
         self.switch_var = ctk.BooleanVar(value=False)
@@ -239,10 +239,6 @@ class FrameConfigAdvance(ctk.CTkFrame):
 
                                             onvalue=True, offvalue=False)
         self.buttonActivate.grid(row=0, column=0, padx=20, pady=20, sticky="ne")
-        print("INIT bout : " + str(self.switch_var.get()))
-
-
-
 
         self.labelMain = (ctk.CTkLabel(self, text="Configuration avancée", font=("Courrier", 25))
                           .grid(row=0, column=0, padx=20, pady=20, sticky="nw"))
@@ -260,8 +256,9 @@ class FrameConfigAdvance(ctk.CTkFrame):
             capteurs_list = [row[0] for row in reader]
 
         total_rows_advance = len(capteurs_list)
-        self.lstTouchesJoueur = [''] * total_rows_advance
-        self.capteurs_list = [''] * total_rows_advance  # Liste pour stocker les capteurs sélectionnés
+        self.lstTouchesJoueur = [''] * total_rows_advance # Liste pour stocker les touches claviers écrites
+        self.capteurs_choice = [''] * total_rows_advance  # Liste pour stocker les capteurs sélectionnés
+        self.capteurs_choice = [capteurs_list[0]] * total_rows_advance
 
         for i in range(total_rows_advance):
 
@@ -289,12 +286,12 @@ class FrameConfigAdvance(ctk.CTkFrame):
         self.error_label.lift()
 
     def write_selected_options(self, choice, nb):
-        self.capteurs_list[nb] = choice
+        self.capteurs_choice[nb] = choice
 
     def get_touches_and_capteurs(self):
         # Retourne une liste de paires (touche, capteur)
-        print("totale : "+str(list(zip(self.lstTouchesJoueur, self.capteurs_list))))
-        return list(zip(self.lstTouchesJoueur, self.capteurs_list))
+        print("totale : "+str(list(zip(self.lstTouchesJoueur, self.capteurs_choice))))
+        return list(zip(self.lstTouchesJoueur, self.capteurs_choice))
 
     def toggle_sync(self):
 
@@ -471,25 +468,105 @@ def write_selected_options(choice, i):
                 f.write(line)
 
 def check_and_start_tracking(self):
-    if isChoicesValid():
-         StartAllTracking()
-         app.frames[FrameConfig].show_error("")
-    else:
-        app.frames[FrameConfig].show_error("Certains choix sont invalides")
-        #app.frames[FrameNavig].switch_var = ctk.BooleanVar(value=False)
 
-        bouton_trouve = self.buttonTracking
 
-        if bouton_trouve is not None:
-            bouton_trouve.deselect()
-            print(bouton_trouve)
+    if app.frames[FrameConfig].buttonActivate.get() == False and app.frames[FrameConfigAdvance].buttonActivate.get() == False:
+        print("2 FALSE")
+        app.frames[FrameConfig].show_error("Vous devez activer au moins une configuration (bouton Activer)")
+        app.frames[FrameConfigAdvance].show_error("Vous devez activer au moins une configuration (bouton Activer)")
+        self.buttonTracking.deselect()
+
+
+
+    elif app.frames[FrameConfig].buttonActivate.get() == True:
+        print("choix config 1\n\n")
+        if isChoicesValid():
+             StartAllTracking()
+             app.frames[FrameConfig].show_error("")
         else:
-            print("pas trouvé")
+            app.frames[FrameConfig].show_error("Certains choix sont invalides")
+            bouton_trouve = self.buttonTracking
+
+            if bouton_trouve is not None:
+                bouton_trouve.deselect()
+                print(bouton_trouve)
+
+
+
+
+    elif app.frames[FrameConfigAdvance].buttonActivate.get() == True:
+        print("choix config 2\n\n")
+        toucheAndCapteurs = app.frames[FrameConfigAdvance].get_touches_and_capteurs()
+
+        if  all_touches_empty(self, toucheAndCapteurs):
+            app.frames[FrameConfigAdvance].show_error("Vous n'avez saisi aucune touche")
+            self.buttonTracking.deselect()
+        elif all_capteurs_empty(self,toucheAndCapteurs):
+            app.frames[FrameConfigAdvance].show_error("Vous n'avez saisi aucun capteur")
+            self.buttonTracking.deselect()
+        elif has_touche_without_capteur(self,toucheAndCapteurs):
+            self.buttonTracking.deselect()
+        elif has_duplicate_capteur(self,toucheAndCapteurs):
+            self.buttonTracking.deselect()
+        else:
+            clear_error(self)
+
+def all_touches_empty(self, toucheAndCapteurs):
+    return all(touche == '' for touche, _ in toucheAndCapteurs)
+
+def all_capteurs_empty(self, toucheAndCapteurs):
+    return all(capteur == 'Veuillez choisir' for _, capteur in toucheAndCapteurs)
+
+def has_touche_without_capteur(self, toucheAndCapteurs):
+    doublons = {}
+    for touche, capteur in toucheAndCapteurs:
+        if touche != '' and capteur == 'Veuillez choisir':
+            if touche in doublons:
+                doublons[touche] += 1
+            else:
+                doublons[touche] = 1
+    if doublons:
+        for touche, count in doublons.items():
+            app.frames[FrameConfigAdvance].show_error(
+                "Le capteur associé à la touche '{}' ne peut pas être 'Veuillez choisir'.".format(touche))
+        return True
+    return False
+
+def has_duplicate_capteur(self, toucheAndCapteurs):
+    lst_capt_used = []
+    doublons = {}
+    for touche, capteur in toucheAndCapteurs:
+        if touche != '':
+            lst_capt_used.append(capteur)
+    for capteur in lst_capt_used:
+        if lst_capt_used.count(capteur) > 1:
+            if capteur not in doublons:
+                doublons[capteur] = 1
+            else:
+                doublons[capteur] += 1
+    if doublons:
+        for capteur, count in doublons.items():
+            app.frames[FrameConfigAdvance].show_error(
+                "Le capteur '{}' est sélectionné plusieurs fois.".format(capteur))
+        return True
+    return False
+
+def clear_error(self):
+    app.frames[FrameConfig].show_error("")
+    app.frames[FrameConfigAdvance].show_error("")
+
+def show_error(self, message):
+    app.frames[FrameConfigAdvance].show_error(message)
+
+def some_function(self):
+    if app.frames[FrameConfigAdvance].buttonActivate.get():
+        self.check_touches_and_capteurs()
+    else:
+        self.clear_error()
 
 
 
 def isChoicesValid():
-    print("isChoicesValid")
     val = load_selected_options()
     if all(choice == "Veuillez choisir" for choice in val):
         print("Tous les choix sont 'Veuillez choisir'.")
@@ -558,7 +635,6 @@ def StartAllTracking():
     for sensor, uses in sensor_usage.items():
         if uses:
             if sensor == "Accelerometre":
-                print(sensor_methode)
                 tabthread.append(start_accelerometre(sensor_methode["Accelerometre"],*uses))
                 #tabthread.append(start_accelerometre(methodes=sensor_methode["Accelerometre"],*uses ))
             elif sensor == "Camera":
