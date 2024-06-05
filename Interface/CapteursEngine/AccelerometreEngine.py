@@ -3,8 +3,9 @@ import serial
 import paho.mqtt.client as mqtt
 
 
-def AccelerometreTracking(func_action_avant=None, func_action_arrière=None, func_action_gauche=None,
-						  func_action_droite=None, func_action_milieu=None):
+def AccelerometreTracking(func_action_avant=None, func_action_avant_gauche=None, func_action_avant_droite=None,
+						  func_action_arrière=None, func_action_arrière_gauche=None, func_action_arrière_droite=None,
+						  func_action_gauche=None, func_action_droite=None, func_action_milieu=None, fonction_saut=None):
 	def on_connect(client, userdata, flags, rc, properties):
 		print("Connected with result code " + str(rc))
 		client.subscribe("MIN1")
@@ -13,18 +14,33 @@ def AccelerometreTracking(func_action_avant=None, func_action_arrière=None, fun
 		print(msg.topic + " " + str(msg.payload))
 		message = msg.payload.decode()
 		if message is not None:
-			if message == 'AVANT':
+			if message == 'av':
 				if func_action_avant is not None:
 					func_action_avant()
-			elif message == 'ARRIERE':
+			elif message == 'gav':
+				if func_action_avant_gauche is not None:
+					func_action_avant_gauche()
+			elif message == 'dav':
+				if func_action_avant_droite is not None:
+					func_action_avant_droite()
+			elif message == 'ar':
 				if func_action_arrière is not None:
 					func_action_arrière()
-			elif message == 'GAUCHE':
+			elif message == 'gar':
+				if func_action_arrière_gauche is not None:
+					func_action_arrière_gauche()
+			elif message == 'dar':
+				if func_action_arrière_droite is not None:
+					func_action_arrière_droite()
+			elif message == 'g':
 				if func_action_gauche is not None:
 					func_action_gauche()
-			elif message == 'DROITE':
+			elif message == 'd':
 				if func_action_droite is not None:
 					func_action_droite()
+			elif message == 'jump':
+				if fonction_saut is not None:
+					fonction_saut()
 			else:
 				func_action_milieu()
 

@@ -52,7 +52,72 @@ class VirtualController:
             pt.keyUp("d")
             pt.keyUp("z")
             pt.keyUp("s")
+    def mouvement_av(self):
+        self.activate_selected_window()
+        pt.keyDown("z")
+        pt.keyUp("s")
+        pt.keyUp("d")
+        pt.keyUp("q")
 
+    def mouvement_gav(self):
+        self.activate_selected_window()
+        pt.keyDown("z")
+        pt.keyDown("q")
+        pt.keyUp("s")
+        pt.keyUp("d")
+
+    def mouvement_dav(self):
+        self.activate_selected_window()
+        pt.keyDown("z")
+        pt.keyDown("d")
+        pt.keyUp("s")
+        pt.keyUp("q")
+
+    def mouvement_ar(self):
+        self.activate_selected_window()
+        pt.keyDown("s")
+        pt.keyUp("z")
+        pt.keyUp("d")
+        pt.keyUp("q")
+
+    def mouvement_gar(self):
+        self.activate_selected_window()
+        pt.keyDown("s")
+        pt.keyDown("q")
+        pt.keyUp("s")
+        pt.keyUp("d")
+
+
+    def mouvement_dar(self):
+        self.activate_selected_window()
+        pt.keyDown("s")
+        pt.keyDown("d")
+        pt.keyUp("s")
+        pt.keyUp("d")
+    def mouvement_g(self):
+        self.activate_selected_window()
+        pt.keyDown("q")
+        pt.keyUp("d")
+        pt.keyUp("z")
+        pt.keyUp("s")
+
+    def mouvement_d(self):
+        self.activate_selected_window()
+        pt.keyDown("d")
+        pt.keyUp("q")
+        pt.keyUp("z")
+        pt.keyUp("s")
+    def mouvement_saut(self):
+        self.activate_selected_window()
+        pt.keyDown("space")
+
+    def mouvement_stop(self):
+        self.activate_selected_window()
+        pt.keyUp("q")
+        pt.keyUp("d")
+        pt.keyUp("z")
+        pt.keyUp("s")
+        pt.keyUp("space")
     def clic_parmi_plusieurs_choix(self, number, tab):
         self.activate_selected_window()
         pt.hotkey(tab[number])

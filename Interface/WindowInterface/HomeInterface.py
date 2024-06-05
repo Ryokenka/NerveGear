@@ -1,9 +1,8 @@
-import threading
 from tkinter import *
 from typing import Dict, List, Any
 
 import pygetwindow as gw
-
+from multiprocessing import Pool, cpu_count
 from Interface.CapteursEngine.AccelerometreEngine import AccelerometreTracking
 from Interface.CapteursEngine.BitalinoEngine import MuscleTracking
 from Interface.CapteursEngine.TestCameraRecognition import HeadAndHandTracking
@@ -11,7 +10,7 @@ from Interface.GameEngine.VirtualController import VirtualController
 
 import customtkinter as ctk
 import csv
-#Test des commandes
+# Test des commandes
 MC = VirtualController("Minecraft 1.20.6")
 def MCavancer():
     MC.bouger_perso('z', 2, 'avant')
@@ -443,24 +442,31 @@ def StartAllTracking():
 
     for sensor, uses in sensor_usage.items():
         if uses:
-            if sensor == "Camera":
-                tabthread.append(threading.Thread(target=start_camera,args=(sensor_methode["Camera"],*uses,), name= "Camera"))
-            elif sensor == "Accelerometre":
-                tabthread.append(
-                    threading.Thread(target=start_accelerometre,args=(sensor_methode["Accelerometre"], *uses,), name="Accelerometre"))
+            if sensor == "Accelerometre":
+                print(sensor_methode)
+                tabthread.append(start_accelerometre(sensor_methode["Accelerometre"],*uses))
+
+                #tabthread.append(start_accelerometre(methodes=sensor_methode["Accelerometre"],*uses ))
+            elif sensor == "Camera":
+                tabthread.append(start_camera(sensor_methode["Camera"], *uses))
             elif sensor == "EEG":
-                tabthread.append(threading.Thread(target=start_eeg,args=(sensor_methode["EEG"],*uses,), name="EEG"))
+                tabthread.append(start_eeg(*uses, methodes=sensor_methode["EEG"]))
             elif sensor == "EMG":
-                tabthread.append(threading.Thread(target=start_emg,args=(sensor_methode["EMG"],*uses,), name="EMG"))
+                tabthread.append(start_emg(*uses, methodes=sensor_methode["EMG"]))
             elif sensor == "ECG":
-                tabthread.append(threading.Thread(target=start_eeg,args=(sensor_methode["ECG"],*uses,), name="ECG"))
+                tabthread.append(start_ecg(*uses, methodes=sensor_methode["ECG"]))
 
-    for thread in tabthread:
-        print("Démarrage du thread", thread.name)
-        thread.start()
+    with Pool(cpu_count()) as pool:
+        pool.map_async(lambda f: f(), tabthread)
+        pool.close()
+        pool.join()
 
-    for thread in tabthread:
-        thread.join()
+    # for thread in tabthread:
+    #     print("Démarrage du thread", thread.name)
+    #     thread.start()
+    #
+    # for thread in tabthread:
+    #     thread.join()
     print("Fin de la configuration des capteurs")
 
 def start_camera(methodes=None, *usages ):
@@ -500,13 +506,19 @@ def start_camera(methodes=None, *usages ):
 
 
 def start_accelerometre(methodes=None, *usages):
+    print("start_accelerometre")
     if len(usages) == 1 and methodes[0].strip()=="Accelerometre":
         AccelerometreTracking(
-            lambda: MC.clic_deplacements("avant"),
-            lambda: MC.clic_deplacements("arriere"),
-            lambda: MC.clic_deplacements("gauche"),
-            lambda: MC.clic_deplacements("droite"),
-            lambda: MC.clic_deplacements("rien")
+            lambda: MC.mouvement_av(),
+            lambda: MC.mouvement_gav(),
+            lambda: MC.mouvement_dav(),
+            lambda: MC.mouvement_ar(),
+            lambda: MC.mouvement_gar(),
+            lambda: MC.mouvement_dar(),
+            lambda: MC.mouvement_g(),
+            lambda: MC.mouvement_d(),
+            lambda: MC.mouvement_stop(),
+            lambda: MC.mouvement_saut()
         )
 
     #Deplacement
