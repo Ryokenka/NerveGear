@@ -1,4 +1,4 @@
-config_path = "selected_options.txt"
+config_path = "NerveGear\Interface\ConfigEngine\selected_options.txt"
 
 def config_to_code(config_path):
     code = ""
