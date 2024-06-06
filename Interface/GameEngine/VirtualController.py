@@ -14,7 +14,7 @@ class VirtualController:
     def activate_selected_window(self):
         print(" window:", self.window_name)
 
-        WindowSelected = gw.getWindowsWithTitle(self.window_name)[0]
+        WindowSelected = pt.getWindowsWithTitle(self.window_name)[0]
         WindowSelected.activate()
 
     def bouger_perso(self, key_press, duration, action):

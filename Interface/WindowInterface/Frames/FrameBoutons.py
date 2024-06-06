@@ -5,8 +5,6 @@ import customtkinter as ctk
 class FrameBoutons(ctk.CTkFrame):
     def __init__(self, master,app):
         super().__init__(master)
-        MC = app.MC
-
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
         self.grid_columnconfigure(2, weight=1)
@@ -27,14 +25,14 @@ class FrameBoutons(ctk.CTkFrame):
         self.button4.grid(row=2, column=2, padx=10, pady=10, sticky="ew")
 
 
-# Test des commandes
-def MCavancer(MC):
-    MC.bouger_perso('z', 2, 'avant')
-def MCreculer(MC):
-    MC.bouger_perso('s', 2, 'arrière')
-def MCgauche(MC):
-    MC.bouger_perso('q', 2, 'gauche')
-def MCdroite(MC):
-    MC.bouger_perso('d', 2, 'droit')
-def MCjump(MC):
-    MC.clic_rapide('space')
+# # Test des commandes
+# def MCavancer(MC):
+#     MC.bouger_perso('z', 2, 'avant')
+# def MCreculer(MC):
+#     MC.bouger_perso('s', 2, 'arrière')
+# def MCgauche(MC):
+#     MC.bouger_perso('q', 2, 'gauche')
+# def MCdroite(MC):
+#     MC.bouger_perso('d', 2, 'droit')
+# def MCjump(MC):
+#     MC.clic_rapide('space')

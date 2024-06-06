@@ -135,6 +135,8 @@ def detect_2hand(frame, hands, mp_drawing, func_action_doigts):
 
 def HeadAndHandTracking(func_action_gauche=None, func_action_droit=None, func_action_milieu=None,
                         func_action_doigts=None):
+    print("Head and Hand tracking")
+    print("func : ", func_action_doigts)
     capture = cv.VideoCapture(0)
     face_cascade = cv.CascadeClassifier('../CapteursEngine/haarcascade_frontalface_default.xml')
     eye_cascade = cv.CascadeClassifier('../CapteursEngine/haarcascade_eye.xml')
