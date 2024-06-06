@@ -1,0 +1,12 @@
+Veuillez choisir
+Camera
+Accelerometre
+Veuillez choisir
+ECG - rythme cardiaque
+Veuillez choisir
+EMG - bras 1 impulsions
+EMG - bras 2 impulsions
+Veuillez choisir
+EMG - bras 1 impulsions
+EMG - bras 2 impulsions
+Veuillez choisirCamera - doigtsCamera - Eye tracking
