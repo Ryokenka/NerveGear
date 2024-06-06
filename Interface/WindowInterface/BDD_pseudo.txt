@@ -1,1 +1,2 @@
 Pseudo: Clem, Email: Cle@epf, Password: SOLEILSOLEIL
+Pseudo: A, Email: B, Password: C

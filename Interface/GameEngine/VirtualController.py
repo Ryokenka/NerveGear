@@ -1,5 +1,6 @@
 from time import sleep
 import pyautogui as pt
+import pygetwindow as gw
 
 class VirtualController:
     def __init__(self, window_name):
@@ -11,11 +12,14 @@ class VirtualController:
         print("Updating Controller with window:", self.window_name)
 
     def activate_selected_window(self):
-        Minecraft = pt.getWindowsWithTitle(self.window_name)[0]
-        Minecraft.activate()
+        print(" window:", self.window_name)
+
+        WindowSelected = gw.getWindowsWithTitle(self.window_name)[0]
+        WindowSelected.activate()
 
     def bouger_perso(self, key_press, duration, action):
         print("Bouger Perso")
+
         self.activate_selected_window()
         if pt.keyDown(key_press):
             pt.keyUp(key_press)
