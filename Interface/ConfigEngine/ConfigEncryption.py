@@ -1,54 +1,54 @@
-config_path = "NerveGear\Interface\ConfigEngine\selected_options.txt"
+config_path = "selected_options.txt"
 
 def config_to_code(config_path):
     code = ""
     try:
         with open(config_path, 'r') as file:
-            for line_number, line in enumerate(file, start=1):
+            for line_number, line in enumerate(file):
                 
                 # Déplacement (touches flechees)
                 if line_number == 0:
                     if "Veuillez choisir" in line:
                         code += "0"
-                    if "Camera" in line:
+                    elif "Camera" in line:
                         code += "1"
-                    if "Accelerometre" in line:
+                    elif "Accelerometre" in line:
                         code += "2"
 
                 # Vitesse
                 if line_number == 1:
                     if "Veuillez choisir" in line:
                         code += "0"
-                    if "ECG - rythme cardiaque" in line:
+                    elif "ECG - rythme cardiaque" in line:
                         code += "1"
 
                 # Sauter (touche espace)     
                 if line_number == 2:
                     if "Veuillez choisir" in line:
                         code += "0"
-                    if "EMG - bras 1 impulsions" in line:
+                    elif "EMG - bras 1 impulsions" in line:
                         code += "1"
-                    if "EMG - bras 2 impulsions" in line:
+                    elif "EMG - bras 2 impulsions" in line:
                         code += "2"
-                    if "EEG - clignement des yeux" in line:
+                    elif "EEG - clignement des yeux" in line:
                         code += "3"
 
                 # Clique souris
                 if line_number == 3:
                     if "Veuillez choisir" in line:
                         code += "0"
-                    if "EMG - bras 1 impulsions" in line:
+                    elif "EMG - bras 1 impulsions" in line:
                         code += "1"
-                    if "EMG - bras 2 impulsions" in line:
+                    elif "EMG - bras 2 impulsions" in line:
                         code += "2"
 
                 # Changer d'objet en main
                 if line_number == 4:
                     if "Veuillez choisir" in line:
                         code += "0"
-                    if "Camera - doigts" in line:
+                    elif "Camera - doigts" in line:
                         code += "1"
-                    if "Camera - Eye tracking" in line:
+                    elif "Camera - Eye tracking" in line:
                         code += "2"
 
     except FileNotFoundError:
@@ -68,45 +68,45 @@ def code_to_config(code):
         if line_number == 0:
             if '0' in code[line_number]:
                 config += "Veuillez choisir\n"
-            if '1' in code[line_number]:
+            elif '1' in code[line_number]:
                 config += "Camera\n"
-            if '2' in code[line_number]:
+            elif '2' in code[line_number]:
                 config += "Accelerometre\n"
 
         # Vitesse
         if line_number == 1:
             if '0' in code[line_number]:
                 config += "Veuillez choisir\n"
-            if '1' in code[line_number]:
+            elif '1' in code[line_number]:
                 config += "ECG - rythme cardiaque\n"
 
         # Sauter (touche espace)
         if line_number == 2:
             if '0' in code[line_number]:
                 config += "Veuillez choisir\n"
-            if '1' in code[line_number]:
+            elif '1' in code[line_number]:
                 config += "EMG - bras 1 impulsions\n"
-            if '2' in code[line_number]:
+            elif '2' in code[line_number]:
                 config += "EMG - bras 2 impulsions\n"
-            if '3' in code[line_number]:
+            elif '3' in code[line_number]:
                 config += "EEG - clignement des yeux\n"
 
         # Clique souris
         if line_number == 3:
             if '0' in code[line_number]:
                 config += "Veuillez choisir\n"
-            if '1' in code[line_number]:
+            elif '1' in code[line_number]:
                 config += "EMG - bras 1 impulsions\n"
-            if '2' in code[line_number]:
+            elif '2' in code[line_number]:
                 config += "EMG - bras 2 impulsions\n"
 
         # Changer d'objet en main
         if line_number == 4:
             if '0' in code[line_number]:
                 config += "Veuillez choisir"
-            if '1' in code[line_number]:
+            elif '1' in code[line_number]:
                 config += "Camera - doigts"
-            if '2' in code[line_number]:
+            elif '2' in code[line_number]:
                 config += "Camera - Eye tracking"
 
     try:
@@ -122,4 +122,4 @@ print(f'Code de config: {config_to_code(config_path)}')  # "01201"
 # Exemple pour code_to_config
 code = "01201" 
 config = code_to_config(code)
-print(f' Texte de la config : {config}') 
+print(f' Texte de la config : {config}')
