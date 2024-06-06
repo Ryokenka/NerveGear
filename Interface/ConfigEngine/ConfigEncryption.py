@@ -64,46 +64,50 @@ def code_to_config(code):
 
     for line_number in range(5):
 
+        # Déplacement (touches flechees)
         if line_number == 0:
-            if '0' in code:
+            if '0' in code[line_number]:
                 config += "Veuillez choisir\n"
-            if '1' in code:
+            if '1' in code[line_number]:
                 config += "Camera\n"
-            if '2' in code:
+            if '2' in code[line_number]:
                 config += "Accelerometre\n"
 
-        elif line_number == 1:
-            if '0' in code:
+        # Vitesse
+        if line_number == 1:
+            if '0' in code[line_number]:
                 config += "Veuillez choisir\n"
-            if '1' in code:
+            if '1' in code[line_number]:
                 config += "ECG - rythme cardiaque\n"
 
-        elif line_number == 2:
-            if '0' in code:
+        # Sauter (touche espace)
+        if line_number == 2:
+            if '0' in code[line_number]:
                 config += "Veuillez choisir\n"
-            if '1' in code:
+            if '1' in code[line_number]:
                 config += "EMG - bras 1 impulsions\n"
-            if '2' in code:
+            if '2' in code[line_number]:
                 config += "EMG - bras 2 impulsions\n"
-            if '3' in code:
+            if '3' in code[line_number]:
                 config += "EEG - clignement des yeux\n"
 
-        elif line_number == 3:
-            if '0' in code:
+        # Clique souris
+        if line_number == 3:
+            if '0' in code[line_number]:
                 config += "Veuillez choisir\n"
-            if '1' in code:
+            if '1' in code[line_number]:
                 config += "EMG - bras 1 impulsions\n"
-            if '2' in code:
+            if '2' in code[line_number]:
                 config += "EMG - bras 2 impulsions\n"
 
-        elif line_number == 4:
-            if '0' in code:
+        # Changer d'objet en main
+        if line_number == 4:
+            if '0' in code[line_number]:
                 config += "Veuillez choisir"
-            if '1' in code:
+            if '1' in code[line_number]:
                 config += "Camera - doigts"
-            if '2' in code:
+            if '2' in code[line_number]:
                 config += "Camera - Eye tracking"
-
 
     try:
         with open(config_path, 'w') as file:
