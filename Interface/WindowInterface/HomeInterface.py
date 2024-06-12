@@ -143,7 +143,6 @@ class App(ctk.CTk):
         configuration_path = "../ConfigEngine/selected_options.txt"
         code = self.text_widget.get("1.0", "end").strip()
         ConfigEncryption.code_to_config(code, configuration_path)
-        load_config(configuration_path)
         self.frames["FrameConfig"].show_error("Configuration collée avec succès")
 
 
