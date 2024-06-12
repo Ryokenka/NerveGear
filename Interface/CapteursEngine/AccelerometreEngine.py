@@ -1,9 +1,11 @@
+import time
+
 import serial
 
 import paho.mqtt.client as mqtt
 
 
-def AccelerometreTracking(func_action_avant=None, func_action_avant_gauche=None, func_action_avant_droite=None,
+def AccelerometreTracking(stop_event, func_action_avant=None, func_action_avant_gauche=None, func_action_avant_droite=None,
 						  func_action_arrière=None, func_action_arrière_gauche=None, func_action_arrière_droite=None,
 						  func_action_gauche=None, func_action_droite=None, func_action_milieu=None, fonction_saut=None):
 	def on_connect(client, userdata, flags, rc, properties):
@@ -54,6 +56,13 @@ def AccelerometreTracking(func_action_avant=None, func_action_avant_gauche=None,
 	host = "54.38.241.241"
 	client.connect(host, 1883, 60)
 	client.loop_start()
+
+	try:
+		while not stop_event.is_set():
+			time.sleep(0.00001)
+	finally:
+		client.loop_stop()
+		client.disconnect()
 
 
 	# while True:

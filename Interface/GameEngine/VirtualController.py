@@ -158,7 +158,8 @@ class VirtualController:
 
     def mouvement_saut(self):
         self.update_active_window()
-        pt.keyDown("space")
+        pt.keyDown("p")
+        pt.keyUp("p")
 
     def mouvement_stop(self):
         self.update_active_window()

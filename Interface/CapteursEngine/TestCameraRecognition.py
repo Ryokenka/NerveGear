@@ -1,4 +1,5 @@
 import inspect
+import time
 
 import cv2 as cv
 import numpy as np
@@ -132,11 +133,12 @@ def detect_2hand(frame, hands, mp_drawing, func_action_doigts):
         # Appeler la fonction d'action si au moins une main a des doigts levés
         if (left_hand_fingers > 0 or right_hand_fingers > 0) and func_action_doigts:
             print(left_hand_fingers, right_hand_fingers, left_hand_fingers+right_hand_fingers)
+            time.sleep(0.5)
             func_action_doigts(left_hand_fingers+right_hand_fingers)
 
     return frame
 
-def HeadAndHandTracking(func_action_gauche=None, func_action_droit=None, func_action_milieu=None,
+def HeadAndHandTracking(stop_event, func_action_gauche=None, func_action_droit=None, func_action_milieu=None,
                         func_action_doigts=None):
     print("Head and Hand tracking")
     #print("Function for func_action_droit1:", inspect.getsource(func_action_droit))
@@ -157,14 +159,13 @@ def HeadAndHandTracking(func_action_gauche=None, func_action_droit=None, func_ac
     mp_hands = mp.solutions.hands
 
     with mp_hands.Hands(static_image_mode=False, max_num_hands=2, min_detection_confidence=0.8) as hands:
-        while capture.isOpened():
+        while capture.isOpened() and not stop_event.is_set():
             ret, frame = capture.read()
             if not ret:
                 break
 
             # Détecter la tête
             if func_action_gauche or func_action_droit or func_action_milieu:
-
                 frame = detect_head(frame, face_cascade, eye_cascade, func_action_gauche, func_action_droit,
                                     func_action_milieu)
 
