@@ -3,5 +3,9 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.11" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.8 (Projet)" project-jdk-type="Python SDK" />
+<<<<<<< HEAD
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.8 (NerveGear)" project-jdk-type="Python SDK" />
+=======
+  <component name="ProjectRootManager" version="2" project-jdk-name="env38" project-jdk-type="Python SDK" />
+>>>>>>> 2df93c3 (lancer camera avec configuration 2)
 </project>

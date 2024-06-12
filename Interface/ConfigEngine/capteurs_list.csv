@@ -1,8 +1,19 @@
 Veuillez choisir
-Camera - mouvement de tete
-Accelerometre - mouvement de tete
+Camera - mouvement de tete - droite
+Camera - mouvement de tete - gauche
+Camera - mouvement de tete - milieu
+Accelerometre - mouvement de tete - droite
+Accelerometre - mouvement de tete - gauche
+Accelerometre - mouvement de tete - milieu
 EMG - bras 1 impulsion
 EMG - bras 2 impulsions
-EEG - clignement des yeux
-Camera - doigts
-Camera - Eye tracking
+Camera - doigts - 1
+Camera - doigts - 2
+Camera - doigts - 3
+Camera - doigts - 4
+Camera - doigts - 5
+Camera - doigts - 6
+Camera - doigts - 7
+Camera - doigts - 8
+Camera - doigts - 9
+

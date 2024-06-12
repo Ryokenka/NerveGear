@@ -17,6 +17,23 @@ class VirtualController:
         WindowSelected = pt.getWindowsWithTitle(self.window_name)[0]
         WindowSelected.activate()
 
+    def deactivate_all_keys(self):
+        # List of keys to deactivate
+        keys = ['q', 'd', 'z', 's', 'space', 'ctrl', '&', 'é', '"', "'", '(', '-', 'è', '_', 'ç', 'à']
+        for key in keys:
+            if key == 'ctrl':
+                pt.keyUp('ctrl')
+                pt.keyUp('&')
+            else:
+                pt.keyUp(key)
+
+    def activate_key(self, key_press):
+        print("J'active la key:", key_press)
+        self.activate_selected_window()
+        self.deactivate_all_keys()
+        pt.keyDown(key_press)
+        print(f"{key_press} is activated")
+
     def bouger_perso(self, key_press, duration, action):
         print("Bouger Perso")
 
@@ -62,6 +79,9 @@ class VirtualController:
         pt.keyUp("s")
         pt.keyUp("d")
         pt.keyUp("q")
+
+
+
 
     def mouvement_gav(self):
         self.activate_selected_window()

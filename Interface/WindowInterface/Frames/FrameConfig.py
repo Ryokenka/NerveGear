@@ -3,6 +3,8 @@ import customtkinter as ctk
 from Interface.WindowInterface.HomeInterface import write_selected_options
 
 
+from Interface.WindowInterface.HomeInterface import load_selected_options
+
 
 class FrameConfig(ctk.CTkFrame):
     def __init__(self, master,app):
@@ -34,15 +36,24 @@ class FrameConfig(ctk.CTkFrame):
 
         print("INIT bout : " + str(self.switch_var.get()))
 
-
-
+        self.optionmenu_vars = []
         print("row:"+str(self.app.total_rows))
         for i in range(self.app.total_rows):
             for j in range(2):
                 if j == 0:
                     list.e = ctk.CTkLabel(list, text=self.app.lst[i][0])
                 else:
+                    #print("liste selected app  AP: "+str(self.app.lst_selected))
+
+                    #print("liste selected AV : "+str(self.app.lst_selected))
+                    #self.testselct = load_selected_options()
+
+                    #self.app.lst_selected =load_selected_options()
+
+                    #print("liste selected  AP: "+str(self.app.lst_selected))
                     optionmenu_var = ctk.StringVar(value=self.app.lst_selected[i])
+                    self.optionmenu_vars.append(optionmenu_var)
+
                     list.e = ctk.CTkOptionMenu(list, values=self.app.lst[i][1],
                                                command=lambda choice, nb=i: write_selected_options(choice, nb),
                                                variable=optionmenu_var)
@@ -62,4 +73,12 @@ class FrameConfig(ctk.CTkFrame):
         else:
             self.buttonActivate.select()
             self.app.frames["FrameConfigAdvance"].buttonActivate.deselect()
+
+    def update_optionmenu(self):
+        self.app.lst_selected = load_selected_options()
+        print("liste selected  ds func: "+str(self.app.lst_selected))
+
+        for i, optionmenu_var in enumerate(self.optionmenu_vars):
+            optionmenu_var.set(self.app.lst_selected[i])
+
 
