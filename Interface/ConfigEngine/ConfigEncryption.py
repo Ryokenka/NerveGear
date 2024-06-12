@@ -117,10 +117,3 @@ def code_to_config(code, configuration_path):
     except Exception as e:
         print("⚠️ Une erreur est survenue lors de l'écritue de la config:", e)
 
-# Exemple pour config_to_code
-print(f'Code de config: {config_to_code(config_path)}')  # "01201"
-
-# Exemple pour code_to_config
-code = "00000"
-config = code_to_config(code, config_path)
-print(f' Texte de la config : {config}')
