@@ -5,17 +5,41 @@ import pygetwindow as gw
 class VirtualController:
     def __init__(self, window_name):
         self.window_name = window_name
+        self.current_window = None
         print("Init Controller with window:", self.window_name)
 
     def set_window_name(self, window_name):
         self.window_name = window_name
+        self.current_window = None  # Reset current window when the window name is updated
         print("Updating Controller with window:", self.window_name)
 
     def activate_selected_window(self):
-        print(" window:", self.window_name)
+        if self.current_window is None or self.current_window.title != self.window_name:
+            windows = gw.getWindowsWithTitle(self.window_name)
+            if windows:
+                self.current_window = windows[0]
+                print(f"Found window: {self.current_window}")
+                try:
+                    if self.current_window.isMinimized:
+                        print("Window is minimized, restoring...")
+                        self.current_window.restore()
+                        sleep(0.1)
 
-        WindowSelected = pt.getWindowsWithTitle(self.window_name)[0]
-        WindowSelected.activate()
+                    print(f"Activating window: {self.window_name}")
+                    self.current_window.activate()
+                    sleep(0.1)
+
+                    if not self.current_window.isActive:
+                        raise Exception("Failed to activate window.")
+                    print(f"Activated window: {self.window_name}")
+
+                except Exception as e:
+                    print(f"Failed to activate window {self.window_name}: {e}")
+            else:
+                print(f"Window with title '{self.window_name}' not found.")
+
+    def update_active_window(self):
+        self.activate_selected_window()
 
     def deactivate_all_keys(self):
         # List of keys to deactivate
@@ -36,8 +60,7 @@ class VirtualController:
 
     def bouger_perso(self, key_press, duration, action):
         print("Bouger Perso")
-
-        self.activate_selected_window()
+        self.update_active_window()
         if pt.keyDown(key_press):
             pt.keyUp(key_press)
             print(action + " début")
@@ -46,16 +69,16 @@ class VirtualController:
             print(action + " fin")
 
     def clic_rapide(self, key_press):
-        self.activate_selected_window()
+        self.update_active_window()
         pt.hotkey(key_press)
 
     def clic_long(self, key_press):
-        self.activate_selected_window()
+        self.update_active_window()
         pt.keyDown(key_press)
         pt.keyUp(key_press)
 
     def clic_deplacements(self, side):
-        self.activate_selected_window()
+        self.update_active_window()
         if side == "gauche":
             pt.keyDown("q")
             pt.keyUp("d")
@@ -73,8 +96,9 @@ class VirtualController:
             pt.keyUp("d")
             pt.keyUp("z")
             pt.keyUp("s")
+
     def mouvement_av(self):
-        self.activate_selected_window()
+        self.update_active_window()
         pt.keyDown("z")
         pt.keyUp("s")
         pt.keyUp("d")
@@ -84,70 +108,72 @@ class VirtualController:
 
 
     def mouvement_gav(self):
-        self.activate_selected_window()
+        self.update_active_window()
         pt.keyDown("z")
         pt.keyDown("q")
         pt.keyUp("s")
         pt.keyUp("d")
 
     def mouvement_dav(self):
-        self.activate_selected_window()
+        self.update_active_window()
         pt.keyDown("z")
         pt.keyDown("d")
         pt.keyUp("s")
         pt.keyUp("q")
 
     def mouvement_ar(self):
-        self.activate_selected_window()
+        self.update_active_window()
         pt.keyDown("s")
         pt.keyUp("z")
         pt.keyUp("d")
         pt.keyUp("q")
 
     def mouvement_gar(self):
-        self.activate_selected_window()
+        self.update_active_window()
         pt.keyDown("s")
         pt.keyDown("q")
-        pt.keyUp("s")
+        pt.keyUp("z")
         pt.keyUp("d")
-
 
     def mouvement_dar(self):
-        self.activate_selected_window()
+        self.update_active_window()
         pt.keyDown("s")
         pt.keyDown("d")
-        pt.keyUp("s")
-        pt.keyUp("d")
+        pt.keyUp("z")
+        pt.keyUp("q")
+
     def mouvement_g(self):
-        self.activate_selected_window()
+        self.update_active_window()
         pt.keyDown("q")
         pt.keyUp("d")
         pt.keyUp("z")
         pt.keyUp("s")
 
     def mouvement_d(self):
-        self.activate_selected_window()
+        self.update_active_window()
         pt.keyDown("d")
         pt.keyUp("q")
         pt.keyUp("z")
         pt.keyUp("s")
+
     def mouvement_saut(self):
-        self.activate_selected_window()
+        self.update_active_window()
         pt.keyDown("space")
 
     def mouvement_stop(self):
-        self.activate_selected_window()
+        self.update_active_window()
         pt.keyUp("q")
         pt.keyUp("d")
         pt.keyUp("z")
         pt.keyUp("s")
         pt.keyUp("space")
+
     def clic_parmi_plusieurs_choix(self, number, tab):
-        self.activate_selected_window()
+        self.update_active_window()
         pt.hotkey(tab[number])
 
     def mouvement_gauche_droite_cam(self, side):
-        self.activate_selected_window()
+        self.update_active_window()
         if side == "gauche":
             print("je vais a gauche")
             pt.keyDown("q")
@@ -162,20 +188,20 @@ class VirtualController:
             pt.keyUp("z")
 
     def mouvement_saut_muscle(self):
-        self.activate_selected_window()
+        self.update_active_window()
         pt.keyDown("space")
         pt.keyUp("space")
 
     def mouvement_clic_muscle(self):
-        self.activate_selected_window()
-        if not pt.leftClick():
-            pt.leftClick()
+        self.update_active_window()
+        pt.leftClick()
 
     def changer_barre(self, number):
-        self.activate_selected_window()
-        tab = ['&', ')', '"', "'", '(', '-', '=', '_', '$',"*"]
+        self.update_active_window()
+        tab = ['&', ')', '"', "'", '(', '-', '=', '_', '$', "*"]
         if number != 0:
             pt.hotkey(tab[number - 1])
+
 
 # Exemple d'utilisation:
 # minecraft_engine = MinecraftEngine("Minecraft")
