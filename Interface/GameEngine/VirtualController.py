@@ -195,7 +195,7 @@ class VirtualController:
 
     def mouvement_clic_muscle(self):
         self.update_active_window()
-        pt.leftClick()
+        pt.rightClick()
 
     def changer_barre(self, number):
         self.update_active_window()

@@ -22,7 +22,7 @@ from tkinter import Text
 import customtkinter as ctk
 import csv
 
-from NerveGear.Interface.WindowInterface.utils import load_selected_options
+from Interface.WindowInterface.utils import load_selected_options
 
 MC = VirtualController("")
 
@@ -91,7 +91,6 @@ class App(ctk.CTk):
         #     self.frames[F].grid(row=0, column=0, sticky="nsew")
         # self.show_frame(FrameConfig)
 
-<<<<<<< HEAD
         self.text_widget = Text(self.frames["FrameConfig"], height=1, width=5)
         self.text_widget.grid(row=1, column=0, padx=0, pady=30, sticky="ne")
         self.text_widget.bind("<Return>", self.paste_config_code)
@@ -460,9 +459,9 @@ def emg_process(stop_event, methodes, *usages):
             MuscleTracking(stop_event, None, lambda: MC.mouvement_clic_muscle())
     elif len(usages) == 2:
         if methodes[0] == "EMG - bras 1 impulsion":
-            MuscleTracking(stop_event, lambda: MC.mouvement_saut_muscle, lambda: MC.mouvement_clic_muscle())
+            MuscleTracking(stop_event, lambda: MC.mouvement_saut_muscle(), lambda: MC.mouvement_clic_muscle())
         elif methodes[0] == "EMG - bras 2 impulsions":
-            MuscleTracking(stop_event, lambda: MC.mouvement_clic_muscle, lambda: MC.mouvement_saut_muscle())
+            MuscleTracking(stop_event, lambda: MC.mouvement_clic_muscle(), lambda: MC.mouvement_saut_muscle())
 
 
 def start_emg(methodes=None, *usages):
