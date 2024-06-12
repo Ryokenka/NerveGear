@@ -1,6 +1,6 @@
 import customtkinter as ctk
 
-from Interface.WindowInterface.HomeInterface import write_selected_options
+from NerveGear.Interface.WindowInterface.HomeInterface import write_selected_options
 
 
 from Interface.WindowInterface.HomeInterface import load_selected_options

@@ -21,7 +21,7 @@ from tkinter import Text
 import customtkinter as ctk
 import csv
 
-from Interface.WindowInterface.utils import load_selected_options
+from NerveGear.Interface.WindowInterface.utils import load_selected_options
 
 MC = VirtualController("")
 def load_config(filename):

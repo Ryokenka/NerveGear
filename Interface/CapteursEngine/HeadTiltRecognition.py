@@ -2,8 +2,6 @@ import cv2 as cv
 import numpy as np
 import mediapipe as mp
 
-from Interface.GameEngine.VirtualController import MinecraftEngine
-
 
 
 def HeadTracking(func_action_gauche=None, func_action_droit=None, func_action_milieu=None):
