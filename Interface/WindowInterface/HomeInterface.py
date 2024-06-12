@@ -137,11 +137,14 @@ class App(ctk.CTk):
         config_path = "../ConfigEngine/selected_options.txt"
         config_code = ConfigEncryption.config_to_code(config_path)
         pyperclip.copy(config_code)
+        self.frames["FrameConfig"].show_error("Configuration copiée avec succès")
+
     def paste_config_code(self, event):
         configuration_path = "../ConfigEngine/selected_options.txt"
         code = self.text_widget.get("1.0", "end").strip()
         ConfigEncryption.code_to_config(code, configuration_path)
         load_config(configuration_path)
+        self.frames["FrameConfig"].show_error("Configuration collée avec succès")
 
 
 class FrameNavig(ctk.CTkFrame):
