@@ -140,10 +140,20 @@ class App(ctk.CTk):
         self.frames["FrameConfig"].show_error("Configuration copiée avec succès")
 
     def paste_config_code(self, event):
+        print("J APPUIIIIIIIIIIIIIIIIIIIS")
         configuration_path = "../ConfigEngine/selected_options.txt"
         code = self.text_widget.get("1.0", "end").strip()
         ConfigEncryption.code_to_config(code, configuration_path)
         self.frames["FrameConfig"].show_error("Configuration collée avec succès")
+        app.lst_selected = load_selected_options()
+        print ("liste ds paste : ",app.lst_selected)
+        app.frames["FrameConfig"].update_optionmenu()
+        app.frames["FrameConfig"].update()
+
+        #print("ds frame", str(app.frames["FrameConfig"].self.app.lst_selected))
+
+        #app.frames["FrameConfig"].list.e.update()
+
 
 
 class FrameNavig(ctk.CTkFrame):
@@ -509,6 +519,7 @@ if __name__ == "__main__":
     app = App()
     app.lst = lst
     app.lst_selected = lst_selected
+    print("home liste selected : "+str(app.lst_selected))
     app.total_rows = total_rows
     print("row2:" + str(app.total_rows))
 
