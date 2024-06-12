@@ -24,3 +24,15 @@ def load_capteurs_list():
     except Exception as e:
         print(f"An error occurred: {e}")
     return config
+
+
+def write_selected_options(choice, i):
+    print("write")
+    with open('../ConfigEngine/selected_options.txt', 'r') as f:
+        lines = f.readlines()
+    with open('../ConfigEngine/selected_options.txt', 'w') as f:
+        for j, line in enumerate(lines):
+            if j == i:
+                f.write(f'{choice}\n')
+            else:
+                f.write(line)

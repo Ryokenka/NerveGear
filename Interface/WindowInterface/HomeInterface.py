@@ -1,6 +1,7 @@
 import inspect
 import time
 from tkinter import *
+
 from typing import Dict, List, Any
 
 import pygetwindow as gw
@@ -117,7 +118,7 @@ class App(ctk.CTk):
         self.frames["FrameConfig"] = FrameConfig(self.mainframe, self)
         self.frames["FrameConfigAdvance"] = FrameConfigAdvance(self.mainframe, self)
         self.frames["FrameBoutons"] = FrameBoutons(self.mainframe, self)
-        self.frames["FrameMonProfil"] = FrameMonProfil(self.mainframe)
+        self.frames["FrameMonProfil"] = FrameMonProfil(self.mainframe,self)
         self.frames["FrameNervegear"] = FrameNervegear(self.mainframe)
 
         for frame in self.frames.values():

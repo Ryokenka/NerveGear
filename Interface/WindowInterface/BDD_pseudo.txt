@@ -1,2 +1,5 @@
-Pseudo: Clem, Email: Cle@epf, Password: SOLEILSOLEIL
-Pseudo: A, Email: B, Password: C
+Pseudo: Thomas; Email: Thomas@epf.fr; Password: Thomas; SelectedOptions: ['Camera', 'ECG - rythme cardiaque', 'EMG - bras 2 impulsions', 'EMG - bras 1 impulsion', 'Camera - Eye tracking']
+Pseudo: Clem; Email: clem@epf.fr; Password: Clemence; SelectedOptions: ['Accelerometre', 'ECG - rythme cardiaque', 'EEG - clignement des yeux', 'EMG - bras 1 impulsion', 'Camera - doigts']
+Pseudo: Fabien; Email: fabien@epf.fr; Password: Fabien; SelectedOptions: ['Camera', 'ECG - rythme cardiaque', 'EMG - bras 1 impulsion', 'EMG - bras 2 impulsions', 'Camera - doigts']
+Pseudo: Lea; Email: lea@epf.fr; Password: LeaLea; SelectedOptions: ['Camera', 'ECG - rythme cardiaque', 'EMG - bras 1 impulsion', 'EMG - bras 2 impulsions', 'Camera - doigts']
+
