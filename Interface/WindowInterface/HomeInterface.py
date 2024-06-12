@@ -1,3 +1,4 @@
+import inspect
 from tkinter import *
 from typing import Dict, List, Any
 
@@ -210,7 +211,10 @@ def check_and_start_tracking(self):
 
     elif app.frames["FrameConfig"].buttonActivate.get() == True:
         print("choix config 1\n\n")
-        if isChoicesValid():
+        if app.selected_window.get() == "Choisir fenêtre":
+            app.frames["FrameConfig"].show_error("Vous n'avez saisi aucune fenêtre de jeu")
+            self.buttonTracking.deselect()
+        elif isChoicesValid():
              StartAllTracking()
              app.frames["FrameConfig"].show_error("")
         else:
@@ -227,8 +231,11 @@ def check_and_start_tracking(self):
     elif app.frames["FrameConfigAdvance"].buttonActivate.get() == True:
         print("choix config 2\n\n")
         toucheAndCapteurs = app.frames["FrameConfigAdvance"].get_touches_and_capteurs()
+        if app.selected_window.get() == "Choisir fenêtre":
+            app.frames["FrameConfigAdvance"].show_error("Vous n'avez saisi aucune fenêtre de jeu")
+            self.buttonTracking.deselect()
 
-        if  all_touches_empty(self, toucheAndCapteurs):
+        elif  all_touches_empty(self, toucheAndCapteurs):
             app.frames["FrameConfigAdvance"].show_error("Vous n'avez saisi aucune touche")
             self.buttonTracking.deselect()
         elif all_capteurs_empty(self,toucheAndCapteurs):
@@ -240,6 +247,7 @@ def check_and_start_tracking(self):
             self.buttonTracking.deselect()
         else:
             clear_error(self)
+            StartAllTracking()
 
 def all_touches_empty(self, toucheAndCapteurs):
     return all(touche == '' for touche, _ in toucheAndCapteurs)
@@ -309,9 +317,6 @@ def isChoicesValid():
         return True
 def StartAllTracking():
     print("StartAllTracking\n")
-    val = load_selected_options()
-
-
     # Liste des utilisations des capteurs
     sensor_uses = [
         "Déplacement",
@@ -338,56 +343,156 @@ def StartAllTracking():
         "ECG": []
     }
 
-    # Remplissage du dictionnaire des utilisations des capteurs en utilisant les indices de val
-    for i, value in enumerate(val):
-        if "Accelerometre" in value:
-            sensor_usage["Accelerometre"].append(sensor_uses[i])
-            sensor_methode["Accelerometre"].append(val[i])
-        elif "Camera" in value:
-            sensor_usage["Camera"].append(sensor_uses[i])
-            sensor_methode["Camera"].append(val[i])
-        elif "EEG" in value:
-            sensor_usage["EEG"].append(sensor_uses[i])
-            sensor_methode["EEG"].append(val[i])
-        elif "EMG" in value:
-            sensor_usage["EMG"].append(sensor_uses[i])
-            sensor_methode["EMG"].append(val[i])
-        elif "ECG" in value:
-            sensor_usage["ECG"].append(sensor_uses[i])
-            sensor_methode["ECG"].append(val[i])
-        elif "Veuillez choisir" in value:
-            print("Aucun choix")
-        else:
-            print("Choix non reconnu :", value)
+    val = []
 
-    tabthread = []
 
-    for sensor, uses in sensor_usage.items():
-        if uses:
-            if sensor == "Accelerometre":
-                tabthread.append(start_accelerometre(sensor_methode["Accelerometre"],*uses))
-                #tabthread.append(start_accelerometre(methodes=sensor_methode["Accelerometre"],*uses ))
-            elif sensor == "Camera":
-                tabthread.append(start_camera(sensor_methode["Camera"], *uses))
-            elif sensor == "EEG":
-                tabthread.append(start_eeg(sensor_methode["EEG"],*uses))
-            elif sensor == "EMG":
-                tabthread.append(start_emg(sensor_methode["EMG"], *uses))
-            elif sensor == "ECG":
-                tabthread.append(start_ecg(sensor_methode["ECG"],*uses))
+    if app.frames["FrameConfigAdvance"].buttonActivate.get() == True :
+        print("choix2")
+        user_choices = app.frames["FrameConfigAdvance"].get_touches_and_capteurs()
+        print("valllllll",user_choices)
 
-    with Pool(cpu_count()) as pool:
-        pool.map_async(lambda f: f(), tabthread)
-        pool.close()
-        pool.join()
+        def analyze_user_choices(choices):
+            camera_choices = {
+                'tete': {'gauche': None, 'droite': None, 'milieu': None},
+                'doigt': {str(i): None for i in range(1, 10)}
+            }
 
-    # for thread in tabthread:
-    #     print("Démarrage du thread", thread.name)
-    #     thread.start()
-    #
-    # for thread in tabthread:
-    #     thread.join()
-    print("Fin de la configuration des capteurs")
+            for key, action in choices:
+                if 'Camera' in action:
+                    if 'mouvement de tete' in action:
+                        if 'gauche' in action:
+                            camera_choices['tete']['gauche'] = key
+                        elif 'droite' in action:
+                            camera_choices['tete']['droite'] = key
+                        elif 'milieu' in action:
+                            camera_choices['tete']['milieu'] = key
+                    elif 'doigts' in action:
+                        for i in range(1, 10):
+                            if str(i) in action:
+                                camera_choices['doigt'][str(i)] = key
+                                break
+            return camera_choices
+
+        def launch_camera_sensors(camera_config):
+            def create_lambda(key):
+                return lambda: MC.activate_key(key)
+            # Lancer la détection de mouvement de tête si nécessaire
+            if any(camera_config['tete'].values()):
+                print("Lancer la détection de mouvement de tête avec les configurations suivantes:")
+                func_action_gauche = None
+                func_action_droit = None
+                func_action_milieu = None
+
+                for direction, key in camera_config['tete'].items():
+                    if key:
+                        print(f"Mouvement de tête {direction}: touche {key}")
+                        if direction == "gauche":
+                            func_action_gauche = create_lambda(key)
+                        elif direction == "droite":
+                            func_action_droit = create_lambda(key)
+                        elif direction == "milieu":
+                            func_action_milieu = create_lambda(key)
+                # Lancer la détection de mouvement de tête ici
+                #print("Function for func_action_droit:", inspect.getsource(func_action_droit)) marche pas
+
+                HeadAndHandTracking(func_action_gauche, func_action_droit, func_action_milieu, None)
+                #lancer HeadAndHandTracking(func_action_gauche=None, func_action_droit=None, func_action_milieu=None,
+                        #func_action_doigts=None):
+
+                #Savoir quoi mettre à la place de func_action_droite : si la direction et droite : récupérer la key associé et faire activate_key() avec celle la
+                #etc avec les autres func
+
+            # Lancer la détection de mouvement des doigts si nécessaire
+            if any(camera_config['doigt'].values()):
+                print("Lancer la détection de mouvement des doigts avec les configurations suivantes:")
+                for finger, key in camera_config['doigt'].items():
+                    if key:
+                        print(f"Mouvement de doigt {finger}: touche {key}")
+                # Lancer la détection de mouvement des doigts ici
+
+
+            # Lancer la détection de mouvement de tête et des doigts si nécessaire
+
+            #A FAIRE
+
+
+        # Analyse des choix de l'utilisateur
+        camera_config = analyze_user_choices(user_choices)
+        print("\n\nCONFIG" , camera_config)
+
+        # Lancer les capteurs avec les configurations appropriées
+        launch_camera_sensors(camera_config)
+
+
+
+    elif app.frames["FrameConfig"].buttonActivate.get() == True :
+        print("choix1")
+        val = load_selected_options()
+
+        # Accelerometre
+        # Veuillez
+        # choisir
+        # Veuillez
+        # choisir
+        # Veuillez
+        # choisir
+        # Camera - doigts
+
+
+
+
+        # Remplissage du dictionnaire des utilisations des capteurs en utilisant les indices de val
+        for i, value in enumerate(val):
+            if "Accelerometre" in value:
+                sensor_usage["Accelerometre"].append(sensor_uses[i])
+                sensor_methode["Accelerometre"].append(val[i])
+            elif "Camera" in value:
+                sensor_usage["Camera"].append(sensor_uses[i])
+                sensor_methode["Camera"].append(val[i])
+            elif "EEG" in value:
+                sensor_usage["EEG"].append(sensor_uses[i])
+                sensor_methode["EEG"].append(val[i])
+            elif "EMG" in value:
+                sensor_usage["EMG"].append(sensor_uses[i])
+                sensor_methode["EMG"].append(val[i])
+            elif "ECG" in value:
+                sensor_usage["ECG"].append(sensor_uses[i])
+                sensor_methode["ECG"].append(val[i])
+            elif "Veuillez choisir" in value:
+                print("Aucun choix")
+            else:
+                print("Choix non reconnu :", value)
+
+        tabthread = []
+
+        for sensor, uses in sensor_usage.items():
+            if uses:
+                if sensor == "Accelerometre":
+                    tabthread.append(start_accelerometre(sensor_methode["Accelerometre"],*uses))
+                    #tabthread.append(start_accelerometre(methodes=sensor_methode["Accelerometre"],*uses ))
+                elif sensor == "Camera":
+                    tabthread.append(start_camera(sensor_methode["Camera"], *uses))
+                elif sensor == "EEG":
+                    tabthread.append(start_eeg(sensor_methode["EEG"],*uses))
+                elif sensor == "EMG":
+                    tabthread.append(start_emg(sensor_methode["EMG"], *uses))
+                elif sensor == "ECG":
+                    tabthread.append(start_ecg(sensor_methode["ECG"],*uses))
+
+        with Pool(cpu_count()) as pool:
+            pool.map_async(lambda f: f(), tabthread)
+            pool.close()
+            pool.join()
+
+        # for thread in tabthread:
+        #     print("Démarrage du thread", thread.name)
+        #     thread.start()
+        #
+        # for thread in tabthread:
+        #     thread.join()
+        print("Fin de la configuration des capteurs")
+
+    print("FIN START ALL TRACKING")
 
 def start_camera(methodes=None, *usages ):
     #Déplacement / changer d'objet avec main ou eye tracking
@@ -395,8 +500,8 @@ def start_camera(methodes=None, *usages ):
     if len(usages) == 1 and methodes[0].strip()=="Camera":
         HeadAndHandTracking(
             lambda: MC.mouvement_gauche_droite_cam("gauche"),
-            lambda: MC.mouvement_gauche_droite_cam("milieu"),
             lambda: MC.mouvement_gauche_droite_cam("droite"),
+            lambda: MC.mouvement_gauche_droite_cam("milieu"),
             None
         )
 
@@ -514,13 +619,12 @@ if __name__ == "__main__":
     lst =load_config('../ConfigEngine/config.csv')
     lst_selected = load_selected_options()
     total_rows = len(lst)
-    print("row1:" + str(total_rows))
+
 
     app = App()
     app.lst = lst
     app.lst_selected = lst_selected
     print("home liste selected : "+str(app.lst_selected))
     app.total_rows = total_rows
-    print("row2:" + str(app.total_rows))
 
     app.mainloop()

@@ -1,3 +1,5 @@
+import inspect
+
 import cv2 as cv
 import numpy as np
 import mediapipe as mp
@@ -32,19 +34,20 @@ def detect_head(frame, face_cascade, eye_cascade, func_action_gauche, func_actio
         delta_x, delta_y = right_eye_center[0] - left_eye_center[0], right_eye_center[1] - left_eye_center[1]
         angle = np.arctan(delta_y / delta_x) * 180 / np.pi if delta_x != 0 else 90 if delta_y > 0 else -90
 
-        if angle > 5:
-            cv.putText(frame, 'RIGHT TILT :' + str(int(angle)) + ' degrees', (20, 30), cv.FONT_HERSHEY_SIMPLEX, 1,
+        if angle > 10:
+            cv.putText(frame, 'LEFT TILT :' + str(int(angle)) + ' degrees', (20, 30), cv.FONT_HERSHEY_SIMPLEX, 1,
                        (0, 0, 0), 2, cv.LINE_4)
             if func_action_gauche:
                 func_action_gauche()
-        elif angle < -5:
-            cv.putText(frame, 'LEFT TILT :' + str(int(angle)) + ' degrees', (20, 30), cv.FONT_HERSHEY_SIMPLEX, 1,
+        elif angle < -10:
+            cv.putText(frame, 'RIGHT TILT :' + str(int(angle)) + ' degrees', (20, 30), cv.FONT_HERSHEY_SIMPLEX, 1,
                        (0, 0, 0), 2, cv.LINE_4)
             if func_action_droit:
                 func_action_droit()
         else:
             cv.putText(frame, 'STRAIGHT :', (20, 30), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2, cv.LINE_4)
             if func_action_milieu:
+                print("je devrais aller dans VC")
                 func_action_milieu()
 
     return frame
@@ -136,7 +139,16 @@ def detect_2hand(frame, hands, mp_drawing, func_action_doigts):
 def HeadAndHandTracking(func_action_gauche=None, func_action_droit=None, func_action_milieu=None,
                         func_action_doigts=None):
     print("Head and Hand tracking")
-    print("func : ", func_action_doigts)
+    #print("Function for func_action_droit1:", inspect.getsource(func_action_droit))
+    if func_action_droit:
+        print("je veux pouvoir aller à  droite")
+    if func_action_gauche:
+        print("je veux pourvoir aller a gauche")
+    if func_action_milieu:
+        print("je veux pourvoir aller au milieu")
+    if func_action_doigts:
+        print("je veux pourvoir utiliser les mains")
+
     capture = cv.VideoCapture(0)
     face_cascade = cv.CascadeClassifier('../CapteursEngine/haarcascade_frontalface_default.xml')
     eye_cascade = cv.CascadeClassifier('../CapteursEngine/haarcascade_eye.xml')

@@ -1,6 +1,11 @@
 import csv
 
 import customtkinter as ctk
+from Interface.ConfigEngine import *
+import os
+
+from Interface.WindowInterface.utils import load_capteurs_list
+
 
 class FrameConfigAdvance(ctk.CTkFrame):
     def __init__(self, master,app):
@@ -37,9 +42,22 @@ class FrameConfigAdvance(ctk.CTkFrame):
         list_frame.labelCapteurs.grid(row=0, column=1, padx=20, pady=10, sticky="w")
 
         capteurs_list = []
-        with open('../ConfigEngine/capteurs_list.csv', mode='r', newline='') as file:
-            reader = csv.reader(file)
-            capteurs_list = [row[0] for row in reader]
+
+
+
+
+        capteurs_list = load_capteurs_list()
+
+        print("THE LIST",capteurs_list)
+
+
+
+        #with open('../../ConfigEngine/capteurs_list.csv', mode='r', newline='') as file:
+            #print("youpi1")
+            #reader = csv.reader(file)
+            #capteurs_list = [row[0] for row in reader]
+
+
 
         total_rows_advance = len(capteurs_list)
         self.lstTouchesJoueur = [''] * total_rows_advance # Liste pour stocker les touches claviers écrites
