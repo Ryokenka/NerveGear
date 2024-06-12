@@ -1,4 +1,4 @@
-config_path = "selected_options.txt"
+config_path = "../ConfigEngine/selected_options.txt"
 
 def config_to_code(config_path):
     code = ""
@@ -59,8 +59,9 @@ def config_to_code(config_path):
     return code
 
 
-def code_to_config(code):
+def code_to_config(code, configuration_path):
     config = ""
+
 
     for line_number in range(5):
 
@@ -110,7 +111,7 @@ def code_to_config(code):
                 config += "Camera - Eye tracking"
 
     try:
-        with open(config_path, 'w') as file:
+        with open(configuration_path, 'w') as file:
             file.write(config)
         print("✅ Configuration écrite dans selected_options.txt")
     except Exception as e:
@@ -120,6 +121,6 @@ def code_to_config(code):
 print(f'Code de config: {config_to_code(config_path)}')  # "01201"
 
 # Exemple pour code_to_config
-code = "01201" 
-config = code_to_config(code)
+code = "00000"
+config = code_to_config(code, config_path)
 print(f' Texte de la config : {config}')

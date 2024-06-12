@@ -13,6 +13,9 @@ from Interface.WindowInterface.Frames import FrameBoutons
 from Interface.WindowInterface.Frames import FrameNervegear
 from Interface.WindowInterface.Frames import FrameMonProfil
 from Interface.WindowInterface.Frames import FrameConfigAdvance
+from Interface.ConfigEngine import ConfigEncryption
+import pyperclip
+from tkinter import Text
 
 import customtkinter as ctk
 import csv
@@ -29,7 +32,7 @@ def load_config(filename):
             options = row[1:]
             config.append([action, options])
         return config
-    
+
 # Fonction pour sélectionner la fenêtre
 def get_active_windows():
     # Retrieve all windows
@@ -84,8 +87,18 @@ class App(ctk.CTk):
         #     self.frames[F].grid(row=0, column=0, sticky="nsew")
         # self.show_frame(FrameConfig)
 
-        self.dropdown = ctk.CTkOptionMenu(self.frames["FrameConfig"], values=self.window_list, variable=self.selected_window, command=self.update_minecraft_window)
-        self.dropdown.grid(row=1, padx=20, pady=20 , sticky = "ne")
+        self.text_widget = Text(self.frames["FrameConfig"], height=1, width=5)
+        self.text_widget.grid(row=1, column=0, padx=0, pady=30, sticky="ne")
+        self.text_widget.bind("<Return>", self.paste_config_code)
+
+        self.button_copy_code = ctk.CTkButton(self.frames["FrameConfig"], text="Copy Config Code",
+                                              command=self.copy_config_to_clipboard)
+        self.button_copy_code.grid(row=1, column=1, padx=(20, 20), pady=20, sticky="ne")
+
+        # Place the dropdown menu for window selection
+        self.dropdown = ctk.CTkOptionMenu(self.frames["FrameConfig"], values=self.window_list,
+                                          variable=self.selected_window, command=self.update_minecraft_window)
+        self.dropdown.grid(row=1, column=2, padx=(0, 20), pady=20, sticky="ne")
 
         self.dropdown = ctk.CTkOptionMenu(self.frames["FrameConfigAdvance"], values=self.window_list,
                                           variable=self.selected_window, command=self.update_minecraft_window)
@@ -119,6 +132,16 @@ class App(ctk.CTk):
 
     def get_selected_window(self):
         return self.selected_window.get()
+
+    def copy_config_to_clipboard(self):
+        config_path = "../ConfigEngine/selected_options.txt"
+        config_code = ConfigEncryption.config_to_code(config_path)
+        pyperclip.copy(config_code)
+    def paste_config_code(self, event):
+        configuration_path = "../ConfigEngine/selected_options.txt"
+        code = self.text_widget.get("1.0", "end").strip()
+        ConfigEncryption.code_to_config(code, configuration_path)
+        load_config(configuration_path)
 
 
 class FrameNavig(ctk.CTkFrame):

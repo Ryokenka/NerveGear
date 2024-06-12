@@ -1,0 +1,5 @@
+Camera
+ECG - rythme cardiaque
+EMG - bras 1 impulsions
+EMG - bras 1 impulsions
+Camera - doigts
