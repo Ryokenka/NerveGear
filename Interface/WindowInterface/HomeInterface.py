@@ -91,19 +91,20 @@ class App(ctk.CTk):
         #     self.frames[F] = F(self.mainframe)
         #     self.frames[F].grid(row=0, column=0, sticky="nsew")
         # self.show_frame(FrameConfig)
-
-        self.text_widget = Text(self.frames["FrameConfig"], height=1, width=5)
-        self.text_widget.grid(row=1, column=0, padx=0, pady=30, sticky="ne")
-        self.text_widget.bind("<Return>", self.paste_config_code)
-
         self.button_copy_code = ctk.CTkButton(self.frames["FrameConfig"], text="Copy Config Code",
                                               command=self.copy_config_to_clipboard)
-        self.button_copy_code.grid(row=1, column=1, padx=(20, 20), pady=20, sticky="ne")
+        self.button_copy_code.grid(row=1, column=0, padx=80, pady=20, sticky="nw")
+
+        self.text_widget = Text(self.frames["FrameConfig"], height=1, width=5)
+        self.text_widget.grid(row=1,column=0, padx=(20, 20), pady=30, sticky="nw")
+        self.text_widget.bind("<Return>", self.paste_config_code)
+
+
 
         # Place the dropdown menu for window selection
         self.dropdown = ctk.CTkOptionMenu(self.frames["FrameConfig"], values=self.window_list,
                                           variable=self.selected_window, command=self.update_minecraft_window)
-        self.dropdown.grid(row=1, column=2, padx=(0, 20), pady=20, sticky="ne")
+        self.dropdown.grid(row=1, padx=(0, 20), pady=20, sticky="ne")
 
         self.dropdown = ctk.CTkOptionMenu(self.frames["FrameConfigAdvance"], values=self.window_list,
                                           variable=self.selected_window, command=self.update_minecraft_window)
@@ -145,13 +146,11 @@ class App(ctk.CTk):
         self.frames["FrameConfig"].show_error("Configuration copiée avec succès")
 
     def paste_config_code(self, event):
-        print("J APPUIIIIIIIIIIIIIIIIIIIS")
         configuration_path = "../ConfigEngine/selected_options.txt"
         code = self.text_widget.get("1.0", "end").strip()
         ConfigEncryption.code_to_config(code, configuration_path)
         self.frames["FrameConfig"].show_error("Configuration collée avec succès")
         app.lst_selected = load_selected_options()
-        print ("liste ds paste : ",app.lst_selected)
         app.frames["FrameConfig"].update_optionmenu()
         app.frames["FrameConfig"].update()
 

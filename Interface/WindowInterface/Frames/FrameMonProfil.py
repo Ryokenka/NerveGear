@@ -14,7 +14,7 @@ class FrameMonProfil(ctk.CTkFrame):
 
         valid, message = self.check(pseudo, email, password)
         if not valid:
-            print(f"Erreur : {message}")
+            self.show_error(f"Erreur : {message}")
             return
 
         selected_options = load_selected_options()
@@ -23,9 +23,11 @@ class FrameMonProfil(ctk.CTkFrame):
             file.write(
                 f"Pseudo: {pseudo}; Email: {email}; Password: {password}; SelectedOptions: {selected_options}\n")
 
-        print("Profil enregistré dans BDD_pseudo.txt.")
+        self.show_error("Profil enregistré dans BDD_pseudo.txt.")
         self.app.frames['FrameConfig'].update_optionmenu()
-
+    def show_error(self, message):
+        self.error_label.configure(text=message)
+        self.error_label.lift()
     def login(self):
         pseudo = self.entry_pseudo.get()
         email = self.entry_email.get()
@@ -110,6 +112,9 @@ class FrameMonProfil(ctk.CTkFrame):
 
         self.button_login = ctk.CTkButton(self, text="Se connecter", command=self.login)
         self.button_login.grid(row=5, column=0, padx=20, pady=10, sticky="w")
+
+        self.error_label = ctk.CTkLabel(self, text="", font=("Courrier", 12), text_color="Red")
+        self.error_label.grid(row=6, column=1, padx=20, pady=0, sticky="w")
 
 
 

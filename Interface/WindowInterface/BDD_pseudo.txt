@@ -3,3 +3,11 @@ Pseudo: Clem; Email: clem@epf.fr; Password: Clemence; SelectedOptions: ['Acceler
 Pseudo: Fabien; Email: fabien@epf.fr; Password: Fabien; SelectedOptions: ['Camera', 'ECG - rythme cardiaque', 'EMG - bras 1 impulsion', 'EMG - bras 2 impulsions', 'Camera - doigts']
 Pseudo: Lea; Email: lea@epf.fr; Password: LeaLea; SelectedOptions: ['Camera', 'ECG - rythme cardiaque', 'EMG - bras 1 impulsion', 'EMG - bras 2 impulsions', 'Camera - doigts']
 
+Pseudo: fab; Email: fab@fab; Password: okoks; SelectedOptions: ['Veuillez choisir', 'Veuillez choisir', 'Veuillez choisir', 'Veuillez choisir', 'Veuillez choisir']
+Pseudo: zadzad; Email: zdad@zad; Password: zadazd; SelectedOptions: ['Veuillez choisir', 'Veuillez choisir', 'Veuillez choisir', 'Veuillez choisir', 'Veuillez choisir']
+Pseudo: azdodz; Email: pziadja@; Password: djzadojza; SelectedOptions: ['Veuillez choisir', 'Veuillez choisir', 'Veuillez choisir', 'Veuillez choisir', 'Veuillez choisir']
+Pseudo: azdzadzad; Email: zdadza@; Password: zadja; SelectedOptions: ['Veuillez choisir', 'Veuillez choisir', 'Veuillez choisir', 'Veuillez choisir', 'Veuillez choisir']
+Pseudo: azdkazd; Email: padzok@d; Password: zaijdza; SelectedOptions: ['Veuillez choisir', 'Veuillez choisir', 'Veuillez choisir', 'Veuillez choisir', 'Veuillez choisir']
+Pseudo: qdzkjdq; Email: dpzoa@d; Password: kdjzz; SelectedOptions: ['Veuillez choisir', 'Veuillez choisir', 'Veuillez choisir', 'Veuillez choisir', 'Veuillez choisir']
+Pseudo: azaz; Email: dza@d; Password: aaaaa; SelectedOptions: ['Veuillez choisir', 'Veuillez choisir', 'Veuillez choisir', 'Veuillez choisir', 'Veuillez choisir']
+Pseudo: azaz; Email: dza@; Password: aaaaa; SelectedOptions: ['Veuillez choisir', 'Veuillez choisir', 'Veuillez choisir', 'Veuillez choisir', 'Veuillez choisir']

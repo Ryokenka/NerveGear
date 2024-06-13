@@ -20,7 +20,7 @@ class FrameConfig(ctk.CTkFrame):
         list.grid(row=2, column=0, sticky="nsew")
 
         self.error_label = ctk.CTkLabel(self, text="", font=("Courrier", 12), text_color="Red")
-        self.error_label.grid(row=1,column=0, padx=0, pady=0, sticky="nw")
+        self.error_label.grid(row=1,column=0, padx=250, pady=0, sticky="nw")
 
 
         self.labelMain = (ctk.CTkLabel(self, text="Associer les capteurs aux actions souhaitées", font=("Courrier", 25))

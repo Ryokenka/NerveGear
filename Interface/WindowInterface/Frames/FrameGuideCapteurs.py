@@ -23,7 +23,7 @@ class FrameGuideCapteurs(ctk.CTkFrame):
                           .grid(row=3, padx=20, pady=10, sticky="w"))
 
         self.labelText = (ctk.CTkLabel(self,
-                                       text="blabla de l'EEG",
+                                       text=" Placez les électrodes sur le cuir chevelu du sujet en suivant le système de placement international 10-20.",
                                        font=("Courrier", 15), justify="left", wraplength=980)
                           .grid(row=4, padx=20, pady=10, sticky="w"))
 
@@ -43,7 +43,7 @@ class FrameGuideCapteurs(ctk.CTkFrame):
                           .grid(row=7, padx=20, pady=10, sticky="w"))
 
         self.labelText = (ctk.CTkLabel(self,
-                                       text="blabla de l'ECG",
+                                       text="Les électrodes doivent être placées sur les membres et le torse du sujet. Les électrodes des membres sont généralement placées sur les poignets et les chevilles, tandis que les électrodes du torse sont placées à des endroits spécifiques sur la poitrine.",
                                        font=("Courrier", 15), justify="left", wraplength=980)
                           .grid(row=8, padx=20, pady=10, sticky="w"))
 
